@@ -6,14 +6,11 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	//Tomo_Data t("Resources/head.bin");
 
-	//QImage img(t.pixels(), t.data_size.x, t.data_size.y, QImage::Format_Indexed8);
-	//QLabel lbl;
-	//lbl.setPixmap(QPixmap::fromImage(img));
-	//lbl.show();
+	//первый аргумент -- количество слоев в прокрутке
+	//второй -- имя файла
 	
-	tomo w;
+	tomo w(6, "Resources/head.bin");
 	w.show();
 
 	return a.exec();

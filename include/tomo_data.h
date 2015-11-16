@@ -27,5 +27,6 @@ public:
 	Tomo_Data(char*);
 	~Tomo_Data();
 	uchar* pixels(int &lay); //lay - номер слоя
+	void pixels_delete();
 
 };

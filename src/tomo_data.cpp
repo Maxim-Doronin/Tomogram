@@ -37,3 +37,8 @@ uchar* Tomo_Data::pixels(int &lay)
 	}
 	return data_pixels;
 }
+
+void Tomo_Data::pixels_delete()
+{
+	delete [] data_pixels;
+}

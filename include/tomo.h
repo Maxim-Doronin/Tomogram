@@ -13,12 +13,13 @@ class tomo : public QWidget
 	Q_OBJECT
 
 public:
-	tomo(QWidget *parent = 0);
+	tomo(int _lay, char*, QWidget *parent = 0);
 	~tomo();
 	void dumpEvent(QWheelEvent *we);
 	virtual void wheelEvent(QWheelEvent *we);
 private:
-	int lay;
+	int lay;			//отображаемый слой
+	int _lay;			//количество слоев в прокрутке
 	Tomo_Data *t;
 	QImage *img;
 	QLabel *lbl;
