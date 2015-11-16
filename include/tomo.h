@@ -4,21 +4,24 @@
 #include <QtGui/QWidget>
 #include <qlabel.h>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include "tomo_data.h"
 
 
-class tomo : public QLabel
+class tomo : public QWidget
 {
 	Q_OBJECT
 
 public:
-	tomo(QLabel *parent = 0);
-	tomo(Tomo_Data *t);
+	tomo(QWidget *parent = 0);
 	~tomo();
-	virtual void mousePressEvent(QMouseEvent *pe);
-	void dumpEvent(QMouseEvent *pe, const QString& strMessage);
+	void dumpEvent(QWheelEvent *we);
+	virtual void wheelEvent(QWheelEvent *we);
 private:
-	Tomo_Data *tmd;
+	int lay;
+	Tomo_Data *t;
+	QImage *img;
+	QLabel *lbl;
 };
 
 #endif // TOMO_H
