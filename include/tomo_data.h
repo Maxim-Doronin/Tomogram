@@ -23,9 +23,9 @@ public:
 	Scale scale;
 	short* data;
 	uchar* data_pixels;
-	int mSizeOfDataArray;
 public:
 	Tomo_Data(char*);
-	uchar* pixels();
+	~Tomo_Data();
+	uchar* pixels(int &lay); //lay - номер слоя
 
 };

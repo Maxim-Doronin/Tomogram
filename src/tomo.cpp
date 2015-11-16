@@ -1,28 +1,38 @@
 #include "tomo.h"
 #include "tomo_data.h"
 
-tomo::tomo(QLabel *parent)
-	: QLabel(parent)
+tomo::tomo(QWidget *parent)
+	: QWidget(parent)
 {
-
+	t = new Tomo_Data("Resources/head.bin");
+	lay = 0;
+	img = new QImage(t->pixels(lay), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
+	lbl = new QLabel(this);
+	lbl->setPixmap(QPixmap::fromImage(*img));
+	this->resize(t->data_size.x, t->data_size.y);
 }
 
-tomo::tomo(Tomo_Data *t)
-{
-	tmd = t;
-}
 
 tomo::~tomo()
 {
-
+	delete t;
+	delete img;
+	delete lbl;
 }
 
-void tomo::mousePressEvent(QMouseEvent* pe)
+void tomo::wheelEvent(QWheelEvent *we)
 {
-	dumpEvent(pe, "Mouse Pressed");
+	dumpEvent(we);
 }
 
-void tomo::dumpEvent(QMouseEvent *pe, const QString& strMsg)
+void tomo::dumpEvent(QWheelEvent *we)
 {
-	setText(QString::number(tmd->data_size.x)+" "+QString::number(tmd->data_size.y)+" "+QString::number(pe->x()));
+	lay+=(we->delta()/8);
+	delete [] t->data_pixels;
+	delete [] img;
+	img = new QImage(t->pixels(lay), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
+//	img->loadFromData(t->pixels(lay), QImage::Format_Indexed8);
+	
+	lbl->setPixmap(QPixmap::fromImage(*img));
+	this->update();
 }
