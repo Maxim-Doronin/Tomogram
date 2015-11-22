@@ -41,6 +41,9 @@
     <ClCompile Include="..\..\..\sample\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\hystogram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\include\tomo.h">
@@ -49,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\tomo_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\hystogram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

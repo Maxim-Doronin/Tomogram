@@ -11,9 +11,9 @@ struct Data_Size
 
 struct Scale
 { 
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 class Tomo_Data
@@ -21,12 +21,19 @@ class Tomo_Data
 public:
 	Data_Size data_size;
 	Scale scale;
-	short* data;
-	uchar* data_pixels;
+	short* data;		//данные
+	uchar* data_pixels; //отображаемые цвета
+
+	short minTint;
+	short maxTint;
 public:
 	Tomo_Data(char*);
 	~Tomo_Data();
-	uchar* pixels(int &lay); //lay - номер слоя
+	uchar* get_lay(int &lay, short lowIdx, short hiIdx);
+	uchar* get_lay(int &lay);
+	uchar* transfer_function(int lay, short lowIdx, short hiIdx);
+
+	
 	void pixels_delete();
 
 };
