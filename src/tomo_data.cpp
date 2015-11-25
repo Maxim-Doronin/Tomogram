@@ -59,26 +59,12 @@ uchar* Tomo_Data::get_lay(int &lay)
 
 uchar* Tomo_Data::transfer_function(int lay, short lowIdx, short hiIdx)
 {
-	short delta = hiIdx - lowIdx;
-	short density = delta / 256;	//количество плотностей в одном оттенке
-	short hiPixels = ((density + 1)*256 - delta);
-									//количество оттенков, содержащие
-									//повышенную детальность
-	short hiDetail = hiPixels * density;
-									//количество плотностей, 
-									//входящие в повышенную детальность
-	short hiDetailRange = lowIdx + (delta - hiDetail)/2;
-									//нижняя граница интервала 
-									//повышенной детальности
-	short lowPixels = 256 - hiPixels;
-									//количество оттенков, содержащие
-									//пониженную детальность
 	short tint;
-
-
+	short pixel;
+	
 	for (int i=0; i<data_size.x * data_size.y; i++)
 	{
-		short pixel = data[i + lay * data_size.x * data_size.y];
+		pixel = data[i + lay * data_size.x * data_size.y];
 		
 		if (pixel <= lowIdx)
 		{
@@ -88,26 +74,12 @@ uchar* Tomo_Data::transfer_function(int lay, short lowIdx, short hiIdx)
 			
 		if (pixel >= hiIdx)
 		{
-			data_pixels[i] = 0x00;
+			data_pixels[i] = 0xFF;
 			continue;
 		}
 
-		/*if (pixel <= hiDetailRange)
-		{
-			tint = (pixel - lowIdx)/(density + 1);
-			data_pixels[i] = (uchar)tint ;
-			continue;
-		}
-
-		if (pixel > hiDetailRange + hiDetail)
-		{
-			tint = (pixel - hiDetailRange - hiDetail)/(density + 1) + hiPixels + lowPixels/2;
-			data_pixels[i] = (uchar)tint ;
-			continue;
-		}*/
-
-		tint = pixel & 0xFF00 >> 8;//(hiDetailRange + hiDetail - pixel)/density;
-		data_pixels[i] = (uchar)tint ;
+		tint = ((double)(pixel - lowIdx)) / (hiIdx - lowIdx) *255; 
+		data_pixels[i] = tint ;
 	}
 	return data_pixels;
 }
