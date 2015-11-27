@@ -1,5 +1,4 @@
 #include "tomo.h"
-#include "tomo_data.h"
 
 tomo::tomo(int _lay, char* file, QWidget *parent)
 	: QWidget(parent)
@@ -7,14 +6,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	lay = 0;
 	this->_lay = _lay;
 	
-	
-	t = new Tomo_Data(file);
-	lowIdx = t->minTint;
-	hiIdx = t->maxTint;
-
-	img = new QImage(t->get_lay(lay), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
-	lbl = new QLabel(this);
-	lbl->setPixmap(QPixmap::fromImage(*img));
+	lowIdx = 0;
+	hiIdx = 6000;
+	tPM = new TomoPIXMAP(file);
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -26,10 +20,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	layout->addWidget(lineLow);
 	layout->addWidget(lineHi);
 	layout->addWidget(go);
-	layout->addWidget(lbl);
+	layout->addWidget(tPM);
 	this->setLayout(layout);
-	this->resize(t->data_size.x, t->data_size.y);
-
+	
 	connect(lineLow, SIGNAL(textChanged(QString)), this, SLOT(lineLowChange(QString)));
 	connect(lineHi, SIGNAL(textChanged(QString)), this, SLOT(lineHiChange(QString)));
 	connect(go, SIGNAL(clicked()), this, SLOT(goClicked()));
@@ -38,9 +31,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 tomo::~tomo()
 {
-	delete t;
-	delete img;
-	delete lbl;
+	delete tPM;
 }
 
 void tomo::wheelEvent(QWheelEvent *we)
@@ -77,12 +68,7 @@ void tomo::dumpEvent(QWheelEvent *we)
 {
 	if(we != 0)	lay+=(we->delta()/ (120/_lay));
 	
-	t->pixels_delete();
-	delete [] img;
-	img = new QImage(t->get_lay(lay, lowIdx, hiIdx), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
+	tPM->upd(lay, lowIdx, hiIdx);
 	
-	lbl->setPixmap(QPixmap::fromImage(*img));
-	layout->addWidget(lbl);
-	this->setLayout(layout);
 	this->update();
 }

@@ -1,15 +1,15 @@
-#ifndef TOMO_H
-#define TOMO_H
+#pragma once
 
 #include <QtGui/QWidget>
-#include <qlabel.h>
+#include <QLabel>
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QHBoxLayout>
 #include <QLineEdit>
-#include <qpushbutton.h>
-#include <qstring.h>
+#include <QPushButton>
+#include <QString>
 #include "tomo_data.h"
+#include "tomoPIXMAP.h"
 
 
 class tomo : public QWidget
@@ -26,9 +26,8 @@ private:
 	int _lay;			//количество слоев в прокрутке
 	int lowIdx;
 	int hiIdx;
-	Tomo_Data *t;
-	QImage *img;
-	QLabel *lbl;
+
+	TomoPIXMAP *tPM;
 	QHBoxLayout *layout;
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
@@ -40,4 +39,3 @@ private slots:
 	void lineHiChange(QString str);
 };
 
-#endif // TOMO_H

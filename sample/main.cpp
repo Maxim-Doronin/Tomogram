@@ -1,4 +1,5 @@
 #include "tomo.h"
+#include "tomoOGL.h"
 #include <QtGui/QApplication>
 #include <tomo_data.h>
 #include <QLabel>
@@ -12,6 +13,7 @@ int main(int argc, char *argv[])
 	
 	tomo w(6, "Resources/head.bin");
 	w.show();
+
 
 	return a.exec();
 }
