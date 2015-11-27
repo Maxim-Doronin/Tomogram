@@ -6,6 +6,16 @@ TomoOGL::TomoOGL(char* file, QWidget *parent)
 	t = new Tomo_Data(file);
 	lay = 0;
 	flag = 0;
+	lowIdx = 0;
+	hiIdx = 6000;
+	setFixedHeight(513);
+	setFixedWidth(513);
+
+}
+
+TomoOGL::~TomoOGL()
+{
+	delete t;
 }
 
 void TomoOGL::initializeGL()
@@ -30,7 +40,7 @@ void TomoOGL::paintGL()
     glLoadIdentity();           
 
 	if (flag) t->pixels_delete();
-	t->get_lay(lay);
+	t->get_lay(lay, lowIdx, hiIdx);
 	glBegin(GL_POINTS);
 		for (int i = 0; i < t->data_size.x; i++)	
 			for (int j = 0; j < t->data_size.y; j++)
@@ -42,8 +52,10 @@ void TomoOGL::paintGL()
 	flag = 1;
 }
 
-void TomoOGL::upd(int _lay)
+void TomoOGL::upd(int _lay, int _lowIdx, int _hiIdx)
 {
 	this->lay = _lay;
+	this->lowIdx = _lowIdx;
+	this->hiIdx = _hiIdx;
 	updateGL();
 }

@@ -10,6 +10,7 @@
 #include <QString>
 #include "tomo_data.h"
 #include "tomoPIXMAP.h"
+#include "tomoOGL.h"
 
 
 class tomo : public QWidget
@@ -27,7 +28,7 @@ private:
 	int lowIdx;
 	int hiIdx;
 
-	TomoPIXMAP *tPM;
+	TomoOGL *tPM;
 	QHBoxLayout *layout;
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;

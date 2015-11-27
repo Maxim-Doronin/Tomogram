@@ -8,7 +8,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	
 	lowIdx = 0;
 	hiIdx = 6000;
-	tPM = new TomoPIXMAP(file);
+	tPM = new TomoOGL(file);
+
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;

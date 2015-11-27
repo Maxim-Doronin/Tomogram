@@ -9,8 +9,8 @@ class TomoOGL : public QGLWidget
 
 public:
 	TomoOGL(char* file, QWidget *parent = 0);
-	~TomoOGL(){};
-	void upd(int _lay);
+	~TomoOGL();
+	void upd(int _lay, int _lowIdx, int _hiIdx);
 
 private:
 	void initializeGL();
@@ -19,6 +19,8 @@ private:
 
 	int lay;		//отображаемый слой
 	int flag;
+	int lowIdx;
+	int hiIdx;
 	Tomo_Data *t;
 
 };
