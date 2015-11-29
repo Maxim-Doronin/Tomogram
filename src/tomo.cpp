@@ -8,7 +8,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	
 	lowIdx = 0;
 	hiIdx = 6000;
-	tPM = new TomoOGL(file);
+	tGL = new TomoOGL(file);
+	//tPM = new TomoPIXMAP(file);
 
 
 	lineLow = new QLineEdit;
@@ -21,7 +22,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	layout->addWidget(lineLow);
 	layout->addWidget(lineHi);
 	layout->addWidget(go);
-	layout->addWidget(tPM);
+	layout->addWidget(tGL);
+	//layout->addWidget(tPM);
 	this->setLayout(layout);
 	
 	connect(lineLow, SIGNAL(textChanged(QString)), this, SLOT(lineLowChange(QString)));
@@ -69,7 +71,8 @@ void tomo::dumpEvent(QWheelEvent *we)
 {
 	if(we != 0)	lay+=(we->delta()/ (120/_lay));
 	
-	tPM->upd(lay, lowIdx, hiIdx);
+	tGL->upd(lay, lowIdx, hiIdx);
+	//tPM->upd(lay, lowIdx, hiIdx);
 	
 	this->update();
 }

@@ -22,6 +22,8 @@ void TomoOGL::initializeGL()
 {
 	qglClearColor(Qt::black);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_POLYGON_SMOOTH);
+
 }
 
 void TomoOGL::resizeGL(int width, int height)
@@ -37,18 +39,34 @@ void TomoOGL::paintGL()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW); 
-    glLoadIdentity();           
+    glLoadIdentity(); 
+
+	uchar tint;
 
 	if (flag) t->pixels_delete();
 	t->get_lay(lay, lowIdx, hiIdx);
-	glBegin(GL_POINTS);
-		for (int i = 0; i < t->data_size.x; i++)	
-			for (int j = 0; j < t->data_size.y; j++)
+	/*glBegin(GL_POINTS);
+		for (int i = 0; i < t->data_size.y; i++)	
+			for (int j = 0; j < t->data_size.x; j++)
 			{
-				glColor3ub(t->data_pixels[i * t->data_size.y + j], t->data_pixels[i * t->data_size.y + j], t->data_pixels[i * t->data_size.y + j]);
-				glVertex2i(i, j);
+				tint = t->data_pixels[i * t->data_size.x + j];
+				glColor3ub(tint, tint, tint);
+				glVertex2i(j, t->data_size.y - i);
 			}
-	glEnd();
+	glEnd();*/
+
+	for (int i = 0; i < t->data_size.x - 1; i++)
+	{
+		glBegin(GL_QUAD_STRIP);
+			for (int j = 0; j < t->data_size.y * 2; j++)
+			{
+				tint = t->data_pixels[i * t->data_size.x + t->data_size.x * (j%2 == 0 ? 1 : 0) + j/2];
+				glColor3ub(tint, tint, tint);
+				glVertex2i(j/2, j%2 == 0 ? i+1 : i);
+			}
+		glEnd();
+	}
+
 	flag = 1;
 }
 

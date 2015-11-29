@@ -28,7 +28,8 @@ private:
 	int lowIdx;
 	int hiIdx;
 
-	TomoOGL *tPM;
+	TomoOGL *tGL;
+	TomoPIXMAP *tPM;
 	QHBoxLayout *layout;
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;

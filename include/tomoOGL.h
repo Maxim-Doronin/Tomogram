@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QGLWidget>
+#include <cstdlib>
 #include "tomo_data.h"
 
 class TomoOGL : public QGLWidget
