@@ -11,6 +11,7 @@
 #include "tomo_data.h"
 #include "tomoPIXMAP.h"
 #include "tomoOGL.h"
+#include "hystogram.h"
 
 
 class tomo : public QWidget
@@ -30,7 +31,9 @@ private:
 
 	TomoOGL *tGL;
 	TomoPIXMAP *tPM;
+	Hystogram *h;
 	QHBoxLayout *layout;
+	QVBoxLayout *mainBox;
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;

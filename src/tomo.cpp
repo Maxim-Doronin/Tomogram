@@ -11,6 +11,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	tGL = new TomoOGL(file);
 	//tPM = new TomoPIXMAP(file);
 
+	h = new Hystogram(file);
+	h->get_hysto(lay);
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -24,7 +26,11 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	layout->addWidget(go);
 	layout->addWidget(tGL);
 	//layout->addWidget(tPM);
-	this->setLayout(layout);
+
+	mainBox = new QVBoxLayout;
+	mainBox->addLayout(layout);
+	mainBox->addWidget(h);
+	this->setLayout(mainBox);
 	
 	connect(lineLow, SIGNAL(textChanged(QString)), this, SLOT(lineLowChange(QString)));
 	connect(lineHi, SIGNAL(textChanged(QString)), this, SLOT(lineHiChange(QString)));
@@ -69,9 +75,13 @@ void tomo::goClicked()
 
 void tomo::dumpEvent(QWheelEvent *we)
 {
-	if(we != 0)	lay+=(we->delta()/ (120/_lay));
+	if(we != 0)	{
+		lay+=(we->delta()/ (120/_lay));
+		h->get_hysto(lay);
+	}
 	
 	tGL->upd(lay, lowIdx, hiIdx);
+	
 	//tPM->upd(lay, lowIdx, hiIdx);
 	
 	this->update();
