@@ -8,8 +8,8 @@ TomoOGL::TomoOGL(char* file, QWidget *parent)
 	flag = 0;
 	lowIdx = 0;
 	hiIdx = 6000;
-	setFixedHeight(513);
-	setFixedWidth(513);
+	setMinimumHeight(513);
+	setMinimumWidth(513);
 
 }
 
