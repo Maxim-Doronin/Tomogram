@@ -6,7 +6,7 @@ TomoPIXMAP::TomoPIXMAP(char* file, QWidget *parent)
 	t = new Tomo_Data(file);
 	lay = 0;
 
-	img = new QImage(t->get_lay(lay), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
+	img = new QImage(t->get_data_lay(lay), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
 	lbl = new QLabel(this);
 	lbl->setPixmap(QPixmap::fromImage(*img));
 	layout = new QHBoxLayout;
@@ -24,11 +24,11 @@ TomoPIXMAP::~TomoPIXMAP()
 
 void TomoPIXMAP::upd(int _lay, int lowIdx, int hiIdx)
 {
-	t->pixels_delete();
+	t->del_data_lay();
 	delete [] img;
 	
 	lay = _lay;
-	img = new QImage(t->get_lay(lay, lowIdx, hiIdx), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
+	img = new QImage(t->get_data_lay(lay, lowIdx, hiIdx), t->data_size.x, t->data_size.y, QImage::Format_Indexed8);
 	lbl->setPixmap(QPixmap::fromImage(*img));
 
 	this->update();

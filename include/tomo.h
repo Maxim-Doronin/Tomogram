@@ -9,7 +9,6 @@
 #include <QPushButton>
 #include <QString>
 #include "tomo_data.h"
-#include "tomoPIXMAP.h"
 #include "tomoOGL.h"
 #include "hystogram.h"
 
@@ -21,22 +20,21 @@ class tomo : public QWidget
 public:
 	tomo(int _lay, char*, QWidget *parent = 0);
 	~tomo();
-	void dumpEvent(QWheelEvent *we = 0);
-	virtual void wheelEvent(QWheelEvent *we);
-private:
-	int lay;			//отображаемый слой
+protected:
 	int _lay;			//количество слоев в прокрутке
-	int lowIdx;
-	int hiIdx;
 
+	Tomo_Data *tomoData;
 	TomoOGL *tGL;
-	TomoPIXMAP *tPM;
-	Hystogram *h;
+	Hystogram *hysto;
+
 	QHBoxLayout *layout;
 	QVBoxLayout *mainBox;
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;
+
+	void dumpEvent(QWheelEvent *we = 0);
+	virtual void wheelEvent(QWheelEvent *we);
 
 private slots:
 	void goClicked();

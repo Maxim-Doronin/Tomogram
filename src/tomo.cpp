@@ -3,16 +3,12 @@
 tomo::tomo(int _lay, char* file, QWidget *parent)
 	: QWidget(parent)
 {
-	lay = 0;
 	this->_lay = _lay;
 	
-	lowIdx = 0;
-	hiIdx = 6000;
-	tGL = new TomoOGL(file);
-	//tPM = new TomoPIXMAP(file);
-
-	h = new Hystogram(file);
-	h->get_hysto(lay);
+	tomoData = new Tomo_Data(file);
+	tGL		 = new TomoOGL(tomoData);
+	hysto    = new Hystogram(tomoData);
+	hysto->get_hysto();
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -25,11 +21,10 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	layout->addWidget(lineHi);
 	layout->addWidget(go);
 	layout->addWidget(tGL);
-	//layout->addWidget(tPM);
 
 	mainBox = new QVBoxLayout;
 	mainBox->addLayout(layout);
-	mainBox->addWidget(h);
+	mainBox->addWidget(hysto);
 	this->setLayout(mainBox);
 	
 	connect(lineLow, SIGNAL(textChanged(QString)), this, SLOT(lineLowChange(QString)));
@@ -40,7 +35,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 tomo::~tomo()
 {
-	delete tPM;
+	delete tomoData;
 }
 
 void tomo::wheelEvent(QWheelEvent *we)
@@ -51,9 +46,9 @@ void tomo::wheelEvent(QWheelEvent *we)
 void tomo::lineLowChange(QString str)
 {
 	int _lowIdx = str.toInt();
-	if (_lowIdx <= hiIdx){ 
+	if (_lowIdx <= tomoData->hiIdx){ 
 		go->setEnabled(true);
-		lowIdx = _lowIdx;}
+		tomoData->lowIdx = _lowIdx;}
 	else
 		go->setEnabled(false);
 }
@@ -61,9 +56,9 @@ void tomo::lineLowChange(QString str)
 void tomo::lineHiChange(QString str)
 {
 	int _hiIdx = str.toInt();
-	if (lowIdx <= _hiIdx){
+	if (tomoData->lowIdx <= _hiIdx){
 		go->setEnabled(true);
-		hiIdx = _hiIdx; }
+		tomoData->hiIdx = _hiIdx; }
 	else
 		go->setEnabled(false);
 }
@@ -76,11 +71,11 @@ void tomo::goClicked()
 void tomo::dumpEvent(QWheelEvent *we)
 {
 	if(we != 0)	{
-		lay+=(we->delta()/ (120/_lay));
-		h->get_hysto(lay);
+		tomoData->lay+=(we->delta()/ (120/_lay));
+		hysto->get_hysto();
 	}
 	
-	tGL->upd(lay, lowIdx, hiIdx);
+	tGL->upd();
 	
 	//tPM->upd(lay, lowIdx, hiIdx);
 	

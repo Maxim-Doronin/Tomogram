@@ -18,23 +18,25 @@ struct Scale
 
 class Tomo_Data
 {
-public:
+private:
+	uchar* transfer_function();
+public: 
 	Data_Size data_size;
 	Scale scale;
-	short* data;			//данные
-	uchar* data_pixels;		//отображаемые цвета
+	
+	short* data;			//исходные данные
+	uchar* data_lay;		//отображаемые оттенки серого
 
-	short minTint;
-	short maxTint;
+	short* data_density;	//данные для гистограмм	
+
+	int lay;
+	int lowIdx;
+	int hiIdx;
 public:
 	Tomo_Data(char*);
-	~Tomo_Data();
+	virtual ~Tomo_Data();
 	
-	uchar* get_lay(int &lay, short lowIdx, short hiIdx);
-	uchar* get_lay(int &lay);
-	
-	uchar* transfer_function(int lay, short lowIdx, short hiIdx);
+	uchar* get_data_lay();
 
-	void pixels_delete();
-
+	void get_data_density();
 };

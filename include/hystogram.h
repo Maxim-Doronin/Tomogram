@@ -10,19 +10,15 @@ class Hystogram : public QWidget
 	Q_OBJECT
 
 public:
-	Hystogram(char *file, QWidget *parent = 0);
+	Hystogram(Tomo_Data*&, QWidget *parent = 0);
 	~Hystogram(){};
 private:
-	Tomo_Data *t;
+	Tomo_Data *tD;
 
 	QCustomPlot *customPlot;
 	QCPBars *fossil;
 	QVBoxLayout *vbox;
 
-	int lay;
-	int *hysto_data;
-	void get_data();
-	void del_data();
 public:
-	void get_hysto(int _lay);
+	void get_hysto();
 };
