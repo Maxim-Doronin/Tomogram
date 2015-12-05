@@ -36,7 +36,13 @@ void Hystogram::get_hysto()
 		ticks << i;
 
 	QVector<double> fossilData;
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < tD->lowIdx; i++)
+		fossilData << tD->data_density[i];
+	fossilData << 4000;
+	for (int i = tD->lowIdx + 1; i < tD->hiIdx; i++)
+		fossilData << tD->data_density[i];
+	fossilData << 4000;
+	for (int i = tD->hiIdx + 1; i < 4000; i++)
 		fossilData << tD->data_density[i];
 
 	fossil->setData(ticks, fossilData);

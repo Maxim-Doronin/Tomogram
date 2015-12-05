@@ -4,6 +4,7 @@
 #include "qcustomplot.h"
 #include "tomo_data.h"
 #include <QVBoxLayout>
+#include <QSlider>
 
 class Hystogram : public QWidget
 {

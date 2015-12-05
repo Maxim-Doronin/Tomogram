@@ -28,10 +28,17 @@ protected:
 	Hystogram *hysto;
 
 	QHBoxLayout *layout;
+	QVBoxLayout *sliders;
 	QVBoxLayout *mainBox;
+	QHBoxLayout *margin;
+	QVBoxLayout *marginLeft;
+	
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;
+
+	QSlider *sliderLeft;
+	QSlider *sliderRight;
 
 	void dumpEvent(QWheelEvent *we = 0);
 	virtual void wheelEvent(QWheelEvent *we);
@@ -40,5 +47,8 @@ private slots:
 	void goClicked();
 	void lineLowChange(QString str);
 	void lineHiChange(QString str);
+
+	void setRangeLeft(int);
+	void setRangeRight(int);
 };
 
