@@ -11,22 +11,32 @@ struct Data_Size
 
 struct Scale
 { 
-	int x;
-	int y;
-	int z;
+	float x;
+	float y;
+	float z;
 };
 
 class Tomo_Data
 {
-public:
+private:
+	uchar* transfer_function();
+public: 
 	Data_Size data_size;
 	Scale scale;
-	short* data;
-	uchar* data_pixels;
+	
+	short* data;			//исходные данные
+	uchar* data_lay;		//отображаемые оттенки серого
+
+	short* data_density;	//данные для гистограмм	
+
+	int lay;
+	int lowIdx;
+	int hiIdx;
 public:
 	Tomo_Data(char*);
-	~Tomo_Data();
-	uchar* pixels(int &lay); //lay - номер слоя
-	void pixels_delete();
+	virtual ~Tomo_Data();
+	
+	uchar* get_data_lay();
 
+	void get_data_density();
 };

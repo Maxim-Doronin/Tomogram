@@ -1,4 +1,6 @@
 #include "tomo.h"
+#include "tomoOGL.h"
+#include "hystogram.h"
 #include <QtGui/QApplication>
 #include <tomo_data.h>
 #include <QLabel>

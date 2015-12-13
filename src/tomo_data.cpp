@@ -16,29 +16,67 @@ Tomo_Data::Tomo_Data(char* file)
 	fs.read((char*)data,2*data_size.x * data_size.y * data_size.z);
 
 	fs.close();
+
+	data_lay	 = 0;
+	data_density = 0;
+
+	lay			 = 0;
+	lowIdx		 = 0;
+	hiIdx		 = 4000;
 }
 
 Tomo_Data::~Tomo_Data()
 {
 	delete[] data;
-	delete[] data_pixels;
+	delete[] data_lay;
+	delete[] data_density;
 }
 
-uchar* Tomo_Data::pixels(int &lay)
+uchar* Tomo_Data::get_data_lay()
 {
-	
-	data_pixels = new uchar [data_size.x * data_size.y * data_size.z];
+	if (data_lay) delete data_lay;
+	data_lay = new uchar [data_size.x * data_size.y * data_size.z];
 	
 	if (lay < 0) lay = 0;
 	if (lay > data_size.z - 1) lay = data_size.z - 1;
-	for (int i=0; i<data_size.x * data_size.y; i++)
-	{
-		data_pixels[i] = (uchar)data[i + lay * data_size.x * data_size.y]&0xFF00>>8;
-	}
-	return data_pixels;
+	this->transfer_function();
+	return data_lay;
 }
 
-void Tomo_Data::pixels_delete()
+uchar* Tomo_Data::transfer_function()
 {
-	delete [] data_pixels;
+	short tint;
+	short pixel;
+	
+	for (int i=0; i<data_size.x * data_size.y; i++) {
+		pixel = data[i + lay * data_size.x * data_size.y];
+		
+		if (pixel <= lowIdx) {
+			data_lay[i] = 0x00;
+			continue;
+		}
+		if (pixel >= hiIdx) {
+			data_lay[i] = 0xFF;
+			continue;
+		}
+		tint = ((double)(pixel - lowIdx)) / (hiIdx - lowIdx) *255; 
+		data_lay[i] = tint ;
+	}
+	return data_lay;
+}
+
+void Tomo_Data::get_data_density()
+{
+	if (lay < 0) lay = 0;
+	if (lay > data_size.z - 1) lay = data_size.z - 1;
+
+	if (data_density) delete data_density;
+	data_density = new short [4000];
+
+	for (int i = 0; i < 4000; i++)
+		data_density[i] = 0;
+	for (int i = 0; i < data_size.x * data_size.y; i++)	{
+		if (data[lay * data_size.x * data_size.y + i] < 4000)
+			data_density[data[lay * data_size.x * data_size.y + i]]++;
+	}
 }
