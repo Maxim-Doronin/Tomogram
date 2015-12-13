@@ -11,6 +11,7 @@
 #include "tomo_data.h"
 #include "tomoOGL.h"
 #include "hystogram.h"
+#include "statistic.h"
 
 
 class tomo : public QWidget
@@ -26,8 +27,11 @@ protected:
 	Tomo_Data *tomoData;
 	TomoOGL *tGL;
 	Hystogram *hysto;
+	Stats *stats;
 
 	QHBoxLayout *layout;
+	QVBoxLayout *statistic;
+	QHBoxLayout *image;
 	QVBoxLayout *sliders;
 	QVBoxLayout *mainBox;
 	QHBoxLayout *margin;
@@ -36,6 +40,7 @@ protected:
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;
+	QLabel *pos;
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;
@@ -50,5 +55,6 @@ private slots:
 
 	void setRangeLeft(int);
 	void setRangeRight(int);
+	void setMousePosition(int, int);
 };
 

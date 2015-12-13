@@ -21,8 +21,8 @@ Tomo_Data::Tomo_Data(char* file)
 	data_density = 0;
 
 	lay			 = 0;
-	lowIdx		 = 0;
-	hiIdx		 = 4000;
+	lowIdx		 = 1800;
+	hiIdx		 = 2500;
 }
 
 Tomo_Data::~Tomo_Data()
@@ -71,12 +71,12 @@ void Tomo_Data::get_data_density()
 	if (lay > data_size.z - 1) lay = data_size.z - 1;
 
 	if (data_density) delete data_density;
-	data_density = new short [4000];
+	data_density = new short [2500];
 
-	for (int i = 0; i < 4000; i++)
+	for (int i = 0; i < 2500; i++)
 		data_density[i] = 0;
 	for (int i = 0; i < data_size.x * data_size.y; i++)	{
-		if (data[lay * data_size.x * data_size.y + i] < 4000)
+		if (data[lay * data_size.x * data_size.y + i] < 2500)
 			data_density[data[lay * data_size.x * data_size.y + i]]++;
 	}
 }

@@ -6,13 +6,20 @@ Hystogram::Hystogram(Tomo_Data *&tD, QWidget *parent)
 	this->tD = tD;
 	customPlot = new QCustomPlot(this);
 	
-	customPlot->xAxis->setRange(0.0, 3000.0);
-	customPlot->yAxis->setRange(0.0, 4000.0);
+	customPlot->xAxis->setRange(1800.0, 2500.0);
+	customPlot->yAxis->setRange(0.0, 3500.0);
 
 	vbox = new QVBoxLayout(this);
 	vbox->addWidget(customPlot);
 
 	this->setMinimumHeight(300);
+}
+
+Hystogram::~Hystogram()
+{
+	delete customPlot;
+	delete vbox;
+	delete fossil;
 }
 
 void Hystogram::get_hysto()
@@ -32,17 +39,17 @@ void Hystogram::get_hysto()
 	fossil->setBrush(QColor(0, 0, 0));
 
 	QVector<double> ticks;
-	for (int i = 0; i < 4000; i++)
+	for (int i = 1800; i < 2500; i++)
 		ticks << i;
 
 	QVector<double> fossilData;
-	for (int i = 0; i < tD->lowIdx; i++)
+	for (int i = 1800; i < tD->lowIdx; i++)
 		fossilData << tD->data_density[i];
 	fossilData << 4000;
 	for (int i = tD->lowIdx + 1; i < tD->hiIdx; i++)
 		fossilData << tD->data_density[i];
 	fossilData << 4000;
-	for (int i = tD->hiIdx + 1; i < 4000; i++)
+	for (int i = tD->hiIdx + 1; i < 2500; i++)
 		fossilData << tD->data_density[i];
 
 	fossil->setData(ticks, fossilData);

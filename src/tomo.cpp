@@ -9,6 +9,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	tGL		 = new TomoOGL(tomoData);
 	hysto    = new Hystogram(tomoData);
 	hysto->get_hysto();
+	stats    = new Stats(tomoData);
+
+	pos = new QLabel(this);
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -17,18 +20,25 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	go->setEnabled(false);
 
 	sliderLeft = new QSlider(Qt::Horizontal);
-	sliderLeft->setRange(0, 3000);
-	sliderLeft->setValue(0);
+	sliderLeft->setRange(1800, 2500);
+	sliderLeft->setValue(1800);
 	
 	sliderRight = new QSlider(Qt::Horizontal);
-	sliderRight->setRange(0, 3000);
-	sliderRight->setValue(3000);
-	
+	sliderRight->setRange(1800, 2500);
+	sliderRight->setValue(2500);
+
 	layout = new QHBoxLayout;
 	layout->addWidget(lineLow);
 	layout->addWidget(lineHi);
 	layout->addWidget(go);
-	layout->addWidget(tGL);
+
+	statistic = new QVBoxLayout;
+	statistic->addLayout(layout);
+	statistic->addWidget(pos);
+
+	image = new QHBoxLayout;
+	image->addLayout(statistic);
+	image->addWidget(tGL);
 
 	sliders = new QVBoxLayout;
 	sliders->addWidget(sliderLeft);
@@ -41,7 +51,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	margin->addLayout(sliders);
 
 	mainBox = new QVBoxLayout;
-	mainBox->addLayout(layout);
+	mainBox->addLayout(image);
 	mainBox->addWidget(hysto);
 	mainBox->addLayout(margin);
 	this->setLayout(mainBox);
@@ -51,6 +61,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(go, SIGNAL(clicked()), this, SLOT(goClicked()));
 	connect(sliderLeft, SIGNAL(valueChanged(int)), this, SLOT(setRangeLeft(int)));
 	connect(sliderRight, SIGNAL(valueChanged(int)), this, SLOT(setRangeRight(int)));
+	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePosition(int, int)));
 }
 
 
@@ -117,14 +128,25 @@ void tomo::setRangeRight(int _hiIdx)
 	dumpEvent();
 }
 
+void tomo::setMousePosition(int x, int y)
+{
+	QString str;
+	QString xStr;
+	QString yStr;
+	QString statStr;
+	xStr.setNum(x);
+	yStr.setNum(y);
+	statStr.setNum(stats->averageDensity(x,y));
+	str = xStr + ' ' + yStr + ' ' + statStr;
+	pos->setText(str);
+}
+
 void tomo::dumpEvent(QWheelEvent *we)
 {
-	if(we != 0)	tomoData->lay+=(we->delta()/ (120/_lay));
+	if(we != 0)	tomoData->lay += (we->delta()/ (120/_lay));
 	
 	hysto->get_hysto();
 	tGL->upd();
-	
-	//tPM->upd(lay, lowIdx, hiIdx);
 	
 	this->update();
 }

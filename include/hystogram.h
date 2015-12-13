@@ -12,7 +12,7 @@ class Hystogram : public QWidget
 
 public:
 	Hystogram(Tomo_Data*&, QWidget *parent = 0);
-	~Hystogram(){};
+	~Hystogram();
 private:
 	Tomo_Data *tD;
 

@@ -68,6 +68,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_hystogram.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\statistic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\include\tomo.h">
@@ -85,6 +88,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\tomo_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\statistic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

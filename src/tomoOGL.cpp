@@ -63,3 +63,8 @@ void TomoOGL::upd()
 	updateGL();
 }
 
+void TomoOGL::mousePressEvent(QMouseEvent *we)
+{
+	emit mousePressed(we->x(), we->y());
+}
+
