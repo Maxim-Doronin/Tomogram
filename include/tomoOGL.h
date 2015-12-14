@@ -2,6 +2,8 @@
 
 #include <QGLWidget>
 #include <QMouseEvent>
+#include <QRubberBand>
+#include <QPoint>
 #include <cstdlib>
 #include "tomo_data.h"
 
@@ -20,9 +22,15 @@ private:
 	void resizeGL(int width, int height);
 	void paintGL();
 
+	QPoint origin;
+	QRubberBand *rubberBand;
+
+	virtual void mouseMoveEvent(QMouseEvent *we); 
 	virtual void mousePressEvent(QMouseEvent *we);
+	virtual void mouseReleaseEvent(QMouseEvent *we);
 
 	Tomo_Data *tD;
 signals:
 	void mousePressed(int x, int y);
+	void mouseReleased(int x, int y);
 };

@@ -13,7 +13,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats    = new Stats(tomoData);
 	gB		 = new GaussBlur(tomoData, 1);
 
-	pos = new QLabel(this);
+	posPressed  = new QLabel(this);
+	posReleased = new QLabel(this);
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -39,7 +40,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic = new QVBoxLayout;
 	statistic->addLayout(layout);
 	statistic->addWidget(gaussCheckBox);
-	statistic->addWidget(pos);
+	statistic->addWidget(posPressed);
+	statistic->addWidget(posReleased);
 
 	image = new QHBoxLayout;
 	image->addLayout(statistic);
@@ -66,7 +68,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(go, SIGNAL(clicked()), this, SLOT(goClicked()));
 	connect(sliderLeft, SIGNAL(valueChanged(int)), this, SLOT(setRangeLeft(int)));
 	connect(sliderRight, SIGNAL(valueChanged(int)), this, SLOT(setRangeRight(int)));
-	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePosition(int, int)));
+	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
+	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
 	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
 }
 
@@ -134,7 +137,20 @@ void tomo::setRangeRight(int _hiIdx)
 	dumpEvent();
 }
 
-void tomo::setMousePosition(int x, int y)
+void tomo::setMousePressPosition(int x, int y)
+{
+	pointPressed.setX(x);
+	pointPressed.setY(y);
+	QString str;
+	QString xStr;
+	QString yStr;
+	xStr.setNum(x);
+	yStr.setNum(y);
+	str = xStr + ' ' + yStr;
+	posPressed->setText(str);
+}
+
+void tomo::setMouseReleasePosition(int x, int y)
 {
 	QString str;
 	QString xStr;
@@ -142,9 +158,9 @@ void tomo::setMousePosition(int x, int y)
 	QString statStr;
 	xStr.setNum(x);
 	yStr.setNum(y);
-	statStr.setNum(stats->averageDensity(x,y));
+	statStr.setNum(stats->averageDensity(x, y, pointPressed.x(), pointPressed.y()));
 	str = xStr + ' ' + yStr + ' ' + statStr;
-	pos->setText(str);
+	posReleased->setText(str);
 }
 
 void tomo::gaussCheckChanged(int flag) 

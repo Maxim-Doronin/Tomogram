@@ -6,10 +6,12 @@ TomoOGL::TomoOGL(Tomo_Data *&tD, QWidget *parent)
 	this->tD = tD;
 	setMinimumHeight(513);
 	setMinimumWidth(513);
+	rubberBand = 0;
 }
 
 TomoOGL::~TomoOGL()
 {
+	delete rubberBand;
 }
 
 void TomoOGL::initializeGL()
@@ -63,8 +65,25 @@ void TomoOGL::upd()
 	updateGL();
 }
 
-void TomoOGL::mousePressEvent(QMouseEvent *we)
+void TomoOGL::mouseMoveEvent(QMouseEvent *we)
 {
+	rubberBand->setGeometry(QRect(origin, we->pos()).normalized());
+}
+
+void TomoOGL::mousePressEvent(QMouseEvent *we)
+{	
+	origin = we->pos();
+	if (!rubberBand)
+		rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+	rubberBand->setGeometry(QRect(origin, QSize()));
+	rubberBand->show();
 	emit mousePressed(we->x(), we->y());
 }
+
+void TomoOGL::mouseReleaseEvent(QMouseEvent *we)
+{
+	rubberBand->hide();
+	emit mouseReleased(we->x(), we->y());
+}
+
 

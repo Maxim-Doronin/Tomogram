@@ -44,7 +44,9 @@ protected:
 	QLineEdit *lineHi;
 	QPushButton *go;
 	QCheckBox *gaussCheckBox;
-	QLabel *pos;
+	QLabel *posPressed;
+	QPoint pointPressed;
+	QLabel *posReleased;
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;
@@ -59,7 +61,8 @@ private slots:
 
 	void setRangeLeft(int);
 	void setRangeRight(int);
-	void setMousePosition(int, int);
+	void setMousePressPosition(int, int);
+	void setMouseReleasePosition(int, int);
 
 	void gaussCheckChanged(int);
 };
