@@ -7,11 +7,13 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QCheckBox>
 #include <QString>
 #include "tomo_data.h"
 #include "tomoOGL.h"
 #include "hystogram.h"
 #include "statistic.h"
+#include "gaussBlur.h"
 
 
 class tomo : public QWidget
@@ -28,6 +30,7 @@ protected:
 	TomoOGL *tGL;
 	Hystogram *hysto;
 	Stats *stats;
+	GaussBlur *gB;
 
 	QHBoxLayout *layout;
 	QVBoxLayout *statistic;
@@ -40,6 +43,7 @@ protected:
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;
+	QCheckBox *gaussCheckBox;
 	QLabel *pos;
 
 	QSlider *sliderLeft;
@@ -56,5 +60,7 @@ private slots:
 	void setRangeLeft(int);
 	void setRangeRight(int);
 	void setMousePosition(int, int);
+
+	void gaussCheckChanged(int);
 };
 

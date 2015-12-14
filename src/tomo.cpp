@@ -6,10 +6,12 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	this->_lay = _lay;
 	
 	tomoData = new Tomo_Data(file);
+	tomoData->get_data_lay();
 	tGL		 = new TomoOGL(tomoData);
 	hysto    = new Hystogram(tomoData);
 	hysto->get_hysto();
 	stats    = new Stats(tomoData);
+	gB		 = new GaussBlur(tomoData, 1);
 
 	pos = new QLabel(this);
 
@@ -18,6 +20,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	go		= new QPushButton("go!");
 	go->setDefault(true);
 	go->setEnabled(false);
+
+	gaussCheckBox = new QCheckBox("Gauss Blur");
 
 	sliderLeft = new QSlider(Qt::Horizontal);
 	sliderLeft->setRange(1800, 2500);
@@ -34,6 +38,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 	statistic = new QVBoxLayout;
 	statistic->addLayout(layout);
+	statistic->addWidget(gaussCheckBox);
 	statistic->addWidget(pos);
 
 	image = new QHBoxLayout;
@@ -62,6 +67,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(sliderLeft, SIGNAL(valueChanged(int)), this, SLOT(setRangeLeft(int)));
 	connect(sliderRight, SIGNAL(valueChanged(int)), this, SLOT(setRangeRight(int)));
 	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePosition(int, int)));
+	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
 }
 
 
@@ -141,10 +147,17 @@ void tomo::setMousePosition(int x, int y)
 	pos->setText(str);
 }
 
+void tomo::gaussCheckChanged(int flag) 
+{
+	dumpEvent();
+}
+
 void tomo::dumpEvent(QWheelEvent *we)
 {
 	if(we != 0)	tomoData->lay += (we->delta()/ (120/_lay));
-	
+	tomoData->get_data_lay();
+	if (gaussCheckBox->isChecked())
+		gB->blur();
 	hysto->get_hysto();
 	tGL->upd();
 	

@@ -36,7 +36,7 @@ void TomoOGL::paintGL()
 
 	uchar tint;
 
-	tD->get_data_lay();
+	//tD->get_data_lay();
 	/*glBegin(GL_POINTS);
 		for (int i = 0; i < tD->data_size.y; i++)	
 			for (int j = 0; j < tD->data_size.x; j++)
