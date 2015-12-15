@@ -47,6 +47,10 @@ protected:
 	QLabel *posPressed;
 	QPoint pointPressed;
 	QLabel *posReleased;
+	QLabel *averDensity;
+	QLabel *expValue;
+	QLabel *dispValue;
+	QLabel *meanSquareDev;
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;

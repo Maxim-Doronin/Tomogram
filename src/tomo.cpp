@@ -15,6 +15,10 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 	posPressed  = new QLabel(this);
 	posReleased = new QLabel(this);
+	averDensity = new QLabel(this);
+	expValue	= new QLabel(this);
+	dispValue   = new QLabel(this);
+	meanSquareDev = new QLabel(this);
 
 	lineLow = new QLineEdit;
 	lineHi  = new QLineEdit;
@@ -42,6 +46,10 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic->addWidget(gaussCheckBox);
 	statistic->addWidget(posPressed);
 	statistic->addWidget(posReleased);
+	statistic->addWidget(averDensity);
+	statistic->addWidget(expValue);
+	statistic->addWidget(dispValue);
+	statistic->addWidget(meanSquareDev);
 
 	image = new QHBoxLayout;
 	image->addLayout(statistic);
@@ -155,12 +163,32 @@ void tomo::setMouseReleasePosition(int x, int y)
 	QString str;
 	QString xStr;
 	QString yStr;
-	QString statStr;
+	QString averVal;
+	QString expVal;
+	QString dispVal;
+	QString meanSquareVal;
+	
 	xStr.setNum(x);
 	yStr.setNum(y);
-	statStr.setNum(stats->averageDensity(x, y, pointPressed.x(), pointPressed.y()));
-	str = xStr + ' ' + yStr + ' ' + statStr;
+	str = xStr + ' ' + yStr;
+	
+	averVal.setNum(stats->averageDensity(x, y, pointPressed.x(), pointPressed.y()));
+	averVal = "Average density: " + averVal;
+	
+	expVal.setNum(stats->expectedValue(x, y, pointPressed.x(), pointPressed.y()));
+	expVal  = "Expected value: " + expVal;
+	
+	dispVal.setNum(stats->dispersion());
+	dispVal = "Dispersion: " + dispVal;
+
+	meanSquareVal.setNum(stats->meanSquareDeviation());
+	meanSquareVal = "Mean square deviation: " + meanSquareVal;
+	
 	posReleased->setText(str);
+	averDensity->setText(averVal);
+	expValue->setText(expVal);
+	dispValue->setText(dispVal);
+	meanSquareDev->setText(meanSquareVal);
 }
 
 void tomo::gaussCheckChanged(int flag) 

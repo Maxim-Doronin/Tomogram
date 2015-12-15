@@ -7,7 +7,7 @@ Hystogram::Hystogram(Tomo_Data *&tD, QWidget *parent)
 	customPlot = new QCustomPlot(this);
 	
 	customPlot->xAxis->setRange(1800.0, 2500.0);
-	customPlot->yAxis->setRange(0.0, 3500.0);
+	customPlot->yAxis->setRange(0.0, 0.015);
 
 	vbox = new QVBoxLayout(this);
 	vbox->addWidget(customPlot);

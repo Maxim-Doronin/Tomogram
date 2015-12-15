@@ -1,5 +1,6 @@
 #pragma once
 #include <fstream>
+#include <cstdlib>
 #include <qglobal.h>
 
 struct Data_Size
@@ -27,7 +28,8 @@ public:
 	short* data;			//исходные данные
 	uchar* data_lay;		//отображаемые оттенки серого
 
-	short* data_density;	//данные для гистограмм	
+	double* data_density;	//данные для гистограмм	
+	double* data_density_rectangle;
 
 	int lay;
 	int lowIdx;
@@ -39,4 +41,5 @@ public:
 	uchar* get_data_lay();
 
 	void get_data_density();
+	void get_data_density(int x1, int y1, int x2, int y2);
 };

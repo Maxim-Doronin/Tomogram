@@ -19,6 +19,7 @@ Tomo_Data::Tomo_Data(char* file)
 
 	data_lay	 = 0;
 	data_density = 0;
+	data_density_rectangle = 0;
 
 	lay			 = 0;
 	lowIdx		 = 1800;
@@ -71,12 +72,40 @@ void Tomo_Data::get_data_density()
 	if (lay > data_size.z - 1) lay = data_size.z - 1;
 
 	if (data_density) delete data_density;
-	data_density = new short [2500];
+	data_density = new double [2500];
 
 	for (int i = 0; i < 2500; i++)
 		data_density[i] = 0;
+	int count = 0;
 	for (int i = 0; i < data_size.x * data_size.y; i++)	{
-		if (data[lay * data_size.x * data_size.y + i] < 2500)
+		if (data[lay * data_size.x * data_size.y + i] < 2500){
 			data_density[data[lay * data_size.x * data_size.y + i]]++;
+			count++;
+		}
 	}
+	for (int i = 0; i < 2500; i++)
+		data_density[i] /= count;
+}
+
+void Tomo_Data::get_data_density(int x1, int y1, int x2, int y2)
+{
+	using namespace std;
+	if (lay < 0) lay = 0;
+	if (lay > data_size.z - 1) lay = data_size.z - 1;
+
+	if (data_density_rectangle) delete data_density_rectangle;
+	data_density_rectangle = new double [25000];
+
+	for (int i = 0; i < 25000; i++)
+		data_density_rectangle[i] = 0;
+	int count = 0;
+	for (int j = 0; j < data_size.y; j++)
+		for (int i = 0; i < data_size.x; i++)
+			if ((j >= min(y1, y2)) && (j <= max(y1, y2)) &&
+				(i >= min(x1, x2)) && (i <= max(x1, x2))) {
+				data_density_rectangle[data[lay * data_size.x * data_size.y + j*data_size.x + i]]++;
+				count++;
+			}	
+	for (int i = 0; i < 25000; i++)
+		data_density_rectangle[i] /= count;
 }
