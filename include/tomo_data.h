@@ -27,7 +27,7 @@ public:
 	
 	short* data;			//исходные данные
 	uchar* data_lay;		//отображаемые оттенки серого
-
+	uchar* grad_map;
 	double* data_density;	//данные для гистограмм	
 	double* data_density_rectangle;
 

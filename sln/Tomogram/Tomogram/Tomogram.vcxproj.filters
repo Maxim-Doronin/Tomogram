@@ -74,6 +74,9 @@
     <ClCompile Include="..\..\..\src\gaussBlur.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\sobelOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\..\include\tomo.h">
@@ -97,6 +100,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\gaussBlur.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\sobelOperator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -75,6 +75,14 @@ void TomoOGL::mousePressEvent(QMouseEvent *we)
 	origin = we->pos();
 	if (!rubberBand)
 		rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
+	rubberBand->hide();
+	//QPalette palette;
+	//palette.setBrush(QPalette::Window, QBrush(QColor(0,0,0,0)));
+	//palette.setBrush(QPalette::Highlight, QBrush(QColor(1,1,1,1)));
+	//palette.setBrush(QPalette::Base, QBrush(Qt::red));
+	//rubberBand->setPalette(palette);
+	//rubberBand->setWindowOpacity(0.0);
+	//rubberBand->setWindowFlags(Qt::ToolTip);
 	rubberBand->setGeometry(QRect(origin, QSize()));
 	rubberBand->show();
 	emit mousePressed(we->x(), we->y());
@@ -83,6 +91,11 @@ void TomoOGL::mousePressEvent(QMouseEvent *we)
 void TomoOGL::mouseReleaseEvent(QMouseEvent *we)
 {
 	rubberBand->hide();
+
+	if (we->x() > tD->data_size.x)
+		SetCursorPos(tD->data_size.x, we->y());
+	if (we->y() > tD->data_size.y)
+		SetCursorPos(we->x(), tD->data_size.y);
 	emit mouseReleased(we->x(), we->y());
 }
 

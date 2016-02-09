@@ -14,6 +14,7 @@
 #include "hystogram.h"
 #include "statistic.h"
 #include "gaussBlur.h"
+#include "sobelOperator.h"
 
 
 class tomo : public QWidget
@@ -44,6 +45,7 @@ protected:
 	QLineEdit *lineHi;
 	QPushButton *go;
 	QCheckBox *gaussCheckBox;
+	QCheckBox *sobelCheckBox;
 	QLabel *posPressed;
 	QPoint pointPressed;
 	QLabel *posReleased;
@@ -69,5 +71,6 @@ private slots:
 	void setMouseReleasePosition(int, int);
 
 	void gaussCheckChanged(int);
+	void sobelCheckChanged(int);
 };
 

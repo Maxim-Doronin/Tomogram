@@ -11,7 +11,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	hysto    = new Hystogram(tomoData);
 	hysto->get_hysto();
 	stats    = new Stats(tomoData);
-	gB		 = new GaussBlur(tomoData, 1);
+	gB		 = new GaussBlur(tomoData, 1.4);
 
 	posPressed  = new QLabel(this);
 	posReleased = new QLabel(this);
@@ -27,6 +27,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	go->setEnabled(false);
 
 	gaussCheckBox = new QCheckBox("Gauss Blur");
+	sobelCheckBox = new QCheckBox("Sobel Operator");
 
 	sliderLeft = new QSlider(Qt::Horizontal);
 	sliderLeft->setRange(1800, 2500);
@@ -44,6 +45,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic = new QVBoxLayout;
 	statistic->addLayout(layout);
 	statistic->addWidget(gaussCheckBox);
+	statistic->addWidget(sobelCheckBox);
 	statistic->addWidget(posPressed);
 	statistic->addWidget(posReleased);
 	statistic->addWidget(averDensity);
@@ -79,6 +81,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
 	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
 	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
+	connect(sobelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(sobelCheckChanged(int)));
 }
 
 
@@ -196,12 +199,19 @@ void tomo::gaussCheckChanged(int flag)
 	dumpEvent();
 }
 
+void tomo::sobelCheckChanged(int flag)
+{
+	dumpEvent();
+}
+
 void tomo::dumpEvent(QWheelEvent *we)
 {
 	if(we != 0)	tomoData->lay += (we->delta()/ (120/_lay));
 	tomoData->get_data_lay();
 	if (gaussCheckBox->isChecked())
 		gB->blur();
+	if (sobelCheckBox->isChecked())
+		SobelOperator::sobel(tomoData);
 	hysto->get_hysto();
 	tGL->upd();
 	

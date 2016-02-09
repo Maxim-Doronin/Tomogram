@@ -15,6 +15,7 @@
     <ClCompile Include="..\..\..\src\gaussBlur.cpp" />
     <ClCompile Include="..\..\..\src\hystogram.cpp" />
     <ClCompile Include="..\..\..\src\qcustomplot.cpp" />
+    <ClCompile Include="..\..\..\src\sobelOperator.cpp" />
     <ClCompile Include="..\..\..\src\statistic.cpp" />
     <ClCompile Include="..\..\..\src\tomo.cpp" />
     <ClCompile Include="..\..\..\src\tomoOGL.cpp" />
@@ -88,6 +89,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\..\..\include" "-I$(QTDIR)\include\QtOpenGL"</Command>
     </CustomBuild>
     <ClInclude Include="..\..\..\include\gaussBlur.h" />
+    <ClInclude Include="..\..\..\include\sobelOperator.h" />
     <ClInclude Include="..\..\..\include\statistic.h" />
     <ClInclude Include="..\..\..\include\tomo_data.h" />
   </ItemGroup>
