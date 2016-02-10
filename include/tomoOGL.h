@@ -1,8 +1,11 @@
 #pragma once
 
 #include <QGLWidget>
+#include <QMouseEvent>
+#include <QRubberBand>
+#include <QPoint>
 #include <cstdlib>
-#include "tomo_data.h"
+#include "TomoData.h"
 
 
 class TomoOGL : public QGLWidget
@@ -10,15 +13,26 @@ class TomoOGL : public QGLWidget
 	Q_OBJECT
 
 public:
-	TomoOGL(Tomo_Data*&, QWidget *parent = 0);
+	TomoOGL(uchar*&, int, int, QWidget *parent = 0);
 	~TomoOGL();
 
-	void upd();
-
+	void upd(uchar*&, int, int);
 private:
 	void initializeGL();
 	void resizeGL(int width, int height);
 	void paintGL();
 
-	Tomo_Data *tD;
+	QPoint origin;
+	QRubberBand *rubberBand;
+
+	virtual void mouseMoveEvent(QMouseEvent *we); 
+	virtual void mousePressEvent(QMouseEvent *we);
+	virtual void mouseReleaseEvent(QMouseEvent *we);
+
+	uchar* src;
+	int width;
+	int height;
+signals:
+	void mousePressed(int x, int y);
+	void mouseReleased(int x, int y);
 };

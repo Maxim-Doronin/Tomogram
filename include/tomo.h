@@ -7,10 +7,14 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QCheckBox>
 #include <QString>
-#include "tomo_data.h"
+#include "TomoData.h"
 #include "tomoOGL.h"
 #include "hystogram.h"
+#include "statistic.h"
+#include "gaussBlur.h"
+#include "cannyOperator.h"
 
 
 class tomo : public QWidget
@@ -23,11 +27,14 @@ public:
 protected:
 	int _lay;			//количество слоев в прокрутке
 
-	Tomo_Data *tomoData;
+	TomoData *tomoData;
 	TomoOGL *tGL;
 	Hystogram *hysto;
+	Stats *stats;
 
 	QHBoxLayout *layout;
+	QVBoxLayout *statistic;
+	QHBoxLayout *image;
 	QVBoxLayout *sliders;
 	QVBoxLayout *mainBox;
 	QHBoxLayout *margin;
@@ -36,6 +43,18 @@ protected:
 	QLineEdit *lineLow;
 	QLineEdit *lineHi;
 	QPushButton *go;
+	QCheckBox *gaussCheckBox;
+	QCheckBox *sobelCheckBox;
+	QCheckBox *nonMaxSuppBox;
+	QCheckBox *dbTresholdBox;
+	QCheckBox *tracingEdgBox;
+	QLabel *posPressed;
+	QPoint pointPressed;
+	QLabel *posReleased;
+	QLabel *averDensity;
+	QLabel *expValue;
+	QLabel *dispValue;
+	QLabel *meanSquareDev;
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;
@@ -50,5 +69,13 @@ private slots:
 
 	void setRangeLeft(int);
 	void setRangeRight(int);
+	void setMousePressPosition(int, int);
+	void setMouseReleasePosition(int, int);
+
+	void gaussCheckChanged(int);
+	void sobelCheckChanged(int);
+	void nonMaxSuppChanged(int);
+	void dbTresholdChanged(int);
+	void tracingEdgChanged(int);
 };
 
