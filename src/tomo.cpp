@@ -5,19 +5,21 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 {
 	this->_lay = _lay;
 	
-	tomoData = new Tomo_Data(file);
-	tomoData->get_data_lay();
-	tGL		 = new TomoOGL(tomoData);
-	hysto    = new Hystogram(tomoData);
-	hysto->get_hysto();
+	tomoData = new TomoData(file);
+	tomoData->getData2D();
+	tGL		 = new TomoOGL(tomoData->data2D, tomoData->dataSize.x, tomoData->dataSize.y);
+	hysto    = new Hystogram();
+	hysto->setLay(0);
+	hysto->setLowIdx(1900);
+	hysto->setHiIdx(2250);
+	hysto->get_hysto(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y);
 	stats    = new Stats(tomoData);
-	gB		 = new GaussBlur(tomoData, 1.4);
 
-	posPressed  = new QLabel(this);
-	posReleased = new QLabel(this);
-	averDensity = new QLabel(this);
-	expValue	= new QLabel(this);
-	dispValue   = new QLabel(this);
+	posPressed    = new QLabel(this);
+	posReleased   = new QLabel(this);
+	averDensity   = new QLabel(this);
+	expValue	  = new QLabel(this);
+	dispValue     = new QLabel(this);
 	meanSquareDev = new QLabel(this);
 
 	lineLow = new QLineEdit;
@@ -27,15 +29,25 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	go->setEnabled(false);
 
 	gaussCheckBox = new QCheckBox("Gauss Blur");
+	
 	sobelCheckBox = new QCheckBox("Sobel Operator");
+	
+	nonMaxSuppBox = new QCheckBox("Non-maximum suppression");
+	nonMaxSuppBox->setDisabled(true);
+	
+	dbTresholdBox = new QCheckBox("Double thresholding");
+	dbTresholdBox->setDisabled(true);
+	
+	tracingEdgBox = new QCheckBox("Tracing edges");
+	tracingEdgBox->setDisabled(true);
 
 	sliderLeft = new QSlider(Qt::Horizontal);
 	sliderLeft->setRange(1800, 2500);
-	sliderLeft->setValue(1800);
+	sliderLeft->setValue(1900);
 	
 	sliderRight = new QSlider(Qt::Horizontal);
 	sliderRight->setRange(1800, 2500);
-	sliderRight->setValue(2500);
+	sliderRight->setValue(2250);
 
 	layout = new QHBoxLayout;
 	layout->addWidget(lineLow);
@@ -46,6 +58,10 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic->addLayout(layout);
 	statistic->addWidget(gaussCheckBox);
 	statistic->addWidget(sobelCheckBox);
+	statistic->addWidget(nonMaxSuppBox);
+	statistic->addWidget(dbTresholdBox);
+	statistic->addWidget(tracingEdgBox);
+
 	statistic->addWidget(posPressed);
 	statistic->addWidget(posReleased);
 	statistic->addWidget(averDensity);
@@ -82,6 +98,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
 	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
 	connect(sobelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(sobelCheckChanged(int)));
+	connect(nonMaxSuppBox, SIGNAL(stateChanged(int)), this, SLOT(nonMaxSuppChanged(int)));
+	connect(dbTresholdBox, SIGNAL(stateChanged(int)), this, SLOT(dbTresholdChanged(int)));
+	connect(tracingEdgBox, SIGNAL(stateChanged(int)), this, SLOT(tracingEdgChanged(int)));
 }
 
 
@@ -124,11 +143,14 @@ void tomo::goClicked()
 
 void tomo::setRangeLeft(int _lowIdx)
 {
-	if (_lowIdx < tomoData->hiIdx)
+	if (_lowIdx < tomoData->hiIdx){
 		tomoData->lowIdx = _lowIdx;
+		hysto->setLowIdx(tomoData->lowIdx);
+	}
 	else {
 		sliderLeft->setValue(tomoData->hiIdx - 1);
 		tomoData->lowIdx = tomoData->hiIdx - 1;
+		hysto->setLowIdx(tomoData->lowIdx);
 	}
 	QString str;
 	lineLow->setText(str.setNum(tomoData->lowIdx));
@@ -137,11 +159,14 @@ void tomo::setRangeLeft(int _lowIdx)
 
 void tomo::setRangeRight(int _hiIdx)
 {
-	if (_hiIdx > tomoData->lowIdx)
+	if (_hiIdx > tomoData->lowIdx){
 		tomoData->hiIdx = _hiIdx;
+		hysto->setHiIdx(tomoData->hiIdx);
+	}
 	else {
 		sliderRight->setValue(tomoData->lowIdx + 1);
 		tomoData->hiIdx = tomoData->lowIdx + 1;
+		hysto->setHiIdx(tomoData->hiIdx);
 	}
 	QString str;
 	lineHi->setText(str.setNum(tomoData->hiIdx));
@@ -201,19 +226,69 @@ void tomo::gaussCheckChanged(int flag)
 
 void tomo::sobelCheckChanged(int flag)
 {
+	if (flag)
+		nonMaxSuppBox->setDisabled(false);
+	if (!flag) {
+		nonMaxSuppBox->setDisabled(true);
+		dbTresholdBox->setDisabled(true);
+		tracingEdgBox->setDisabled(true);
+	}
+	dumpEvent();
+}
+
+void tomo::nonMaxSuppChanged(int flag)
+{
+	if (flag)
+		dbTresholdBox->setDisabled(false);
+	if (!flag){
+		dbTresholdBox->setDisabled(true);
+		tracingEdgBox->setDisabled(true);
+	}
+	dumpEvent();
+}
+
+void tomo::dbTresholdChanged(int flag)
+{
+	if (flag)
+		tracingEdgBox->setDisabled(false);
+	if (!flag)
+		tracingEdgBox->setDisabled(true);
+	dumpEvent();
+}
+
+void tomo::tracingEdgChanged(int)
+{
 	dumpEvent();
 }
 
 void tomo::dumpEvent(QWheelEvent *we)
-{
+{	
+	int w = tomoData->dataSize.x;
+	int h = tomoData->dataSize.y;
+
 	if(we != 0)	tomoData->lay += (we->delta()/ (120/_lay));
-	tomoData->get_data_lay();
+	tomoData->getData2D();
+	hysto->setLay(tomoData->lay);
+	hysto->get_hysto(tomoData->data3D, w, h);
+
+	uchar *src = tomoData->data2D;
+
+	float *ga = 0;
+
 	if (gaussCheckBox->isChecked())
-		gB->blur();
+		GaussBlur::blur(src, src, 1.4, w, h);
 	if (sobelCheckBox->isChecked())
-		SobelOperator::sobel(tomoData);
-	hysto->get_hysto();
-	tGL->upd();
+		CannyOperator::sobel(src, src, ga, w, h);
+	if ((nonMaxSuppBox->isChecked())&&(nonMaxSuppBox->isEnabled()))
+		CannyOperator::nonMaxSuppression(src, ga, src, w, h);
+	if ((dbTresholdBox->isChecked())&&(dbTresholdBox->isEnabled()))
+		CannyOperator::doubleTresholding(src, src, 0.55, 0.6, w, h);
+	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
+		CannyOperator::tracingEdges(src, src, w, h);
+
+	tGL->upd(src, w, h);
 	
 	this->update();
+
+	if (!ga) delete []ga;
 }

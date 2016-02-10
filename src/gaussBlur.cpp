@@ -1,10 +1,8 @@
 #include "gaussBlur.h"
 
-GaussBlur::GaussBlur(Tomo_Data *&tD, double sigma)
+void getWindow(float sigma, int &size, double *&window)
 {
-	this->tD = tD;
-	this->sigma = sigma;
-	double s2 = 2*sigma*sigma;
+	float s2 = 2*sigma*sigma;
 
 	size = ceil(3*sigma);
 	window = new double [2*size + 2];
@@ -17,23 +15,30 @@ GaussBlur::GaussBlur(Tomo_Data *&tD, double sigma)
 	}
 }
 
-void GaussBlur::blur()
+void GaussBlur::blur(uchar *&src, uchar *&dst, float sigma, int width, int height)
 {
+	int size;
+	double *window;
+	getWindow(sigma, size, window);
+	
 	double sum;
 	int pix;
 	int tmppix;
 	int neighbor;
 
-	uchar *tmp = new uchar [tD->data_size.x];
+	if ((dst)&&(src != dst)) delete []dst;
+	if (src != dst) dst = new uchar [width * height];
 
-	for (int j = 0; j < tD->data_size.y; j++){
-		for (int i = 0; i < tD->data_size.x; i++){
+	uchar *tmp = new uchar [width];
+
+	for (int j = 0; j < height; j++){
+		for (int i = 0; i < width; i++){
 			sum = 0;
 			pix = 0;
 			for (int k = -size; k < size; k++){
 				neighbor = i + k;
-				if ((neighbor >= 0)&&(neighbor < tD->data_size.x)){
-					tmppix = tD->data_lay[j*tD->data_size.x + neighbor];
+				if ((neighbor >= 0)&&(neighbor < width)){
+					tmppix = src[j*width + neighbor];
 					pix += tmppix * window[k + size];
 					sum = sum + window[k + size];
 				}
@@ -41,21 +46,21 @@ void GaussBlur::blur()
 			pix = (double)pix/sum;
 			tmp[i] = pix;
 		}
-		for (int m = 0; m < tD->data_size.x; m++)
-			tD->data_lay[j * tD->data_size.x + m] = tmp[m];
+		for (int m = 0; m < width; m++)
+			dst[j * width + m] = tmp[m];
 	}
 
 	delete []tmp;
-	tmp = new uchar [tD->data_size.y];
+	tmp = new uchar [height];
 
-	for (int i = 0; i < tD->data_size.x; i++){
-		for (int j = 0; j < tD->data_size.y; j++){
+	for (int i = 0; i < width; i++){
+		for (int j = 0; j < height; j++){
 			sum = 0;
 			pix = 0;
 			for (int k = -size; k < size; k++){
 				neighbor = j + k;
-				if ((neighbor >= 0)&&(neighbor < tD->data_size.x)){
-					tmppix = tD->data_lay[neighbor * tD->data_size.y + i];
+				if ((neighbor >= 0)&&(neighbor < width)){
+					tmppix = src[neighbor * height + i];
 					pix += tmppix * window[k + size];
 					sum = sum + window[k + size];
 				}
@@ -63,8 +68,9 @@ void GaussBlur::blur()
 			pix = (double)pix/sum;
 			tmp[j] = pix;
 		}
-		for (int m = 0; m < tD->data_size.y; m++)
-			tD->data_lay[m * tD->data_size.y + i] = tmp[m];
+		for (int m = 0; m < height; m++)
+			dst[m * height + i] = tmp[m];
 	}
 	delete []tmp;
+	delete []window;
 }

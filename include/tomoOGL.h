@@ -5,7 +5,7 @@
 #include <QRubberBand>
 #include <QPoint>
 #include <cstdlib>
-#include "tomo_data.h"
+#include "TomoData.h"
 
 
 class TomoOGL : public QGLWidget
@@ -13,10 +13,10 @@ class TomoOGL : public QGLWidget
 	Q_OBJECT
 
 public:
-	TomoOGL(Tomo_Data*&, QWidget *parent = 0);
+	TomoOGL(uchar*&, int, int, QWidget *parent = 0);
 	~TomoOGL();
 
-	void upd();
+	void upd(uchar*&, int, int);
 private:
 	void initializeGL();
 	void resizeGL(int width, int height);
@@ -29,7 +29,9 @@ private:
 	virtual void mousePressEvent(QMouseEvent *we);
 	virtual void mouseReleaseEvent(QMouseEvent *we);
 
-	Tomo_Data *tD;
+	uchar* src;
+	int width;
+	int height;
 signals:
 	void mousePressed(int x, int y);
 	void mouseReleased(int x, int y);

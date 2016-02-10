@@ -1,10 +1,10 @@
 #pragma once
-#include "tomo_data.h"
+#include "TomoData.h"
 #include <cstdlib>
 
 class Stats{
 public:
-	Stats(Tomo_Data*&);
+	Stats(TomoData*&);
 	~Stats(){};
 
 	int averageDensity(int x1, int y1, int x2, int y2);
@@ -13,7 +13,7 @@ public:
 	int meanSquareDeviation();
 
 private:
-	Tomo_Data *tD;
+	TomoData *tD;
 	double expVal;
 	double disperVal;
 };

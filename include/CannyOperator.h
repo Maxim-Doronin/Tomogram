@@ -1,8 +1,12 @@
 #pragma once
 #include <cmath>
-#include "tomo_data.h"
+#define pi 3.141592
+typedef unsigned char uchar;
 
-class SobelOperator{
+class CannyOperator {
 public: 
-	static void sobel(Tomo_Data *&tD);
+	static void sobel(uchar *&src, uchar *&dst, float *&ga, int width, int height);
+	static void nonMaxSuppression(uchar *&src, float *&ga, uchar *&dst, int width, int height);
+	static void doubleTresholding(uchar *&src, uchar *&dst, float low_pr, float hi_pr, int width, int height);
+	static void tracingEdges(uchar *&src, uchar *&dst, int width, int height);
 };

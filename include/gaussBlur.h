@@ -1,16 +1,9 @@
-#include "tomo_data.h"
+#pragma once
 #include <cstdlib>
+#include <cmath>
+typedef unsigned char uchar;
 
 class GaussBlur{
 public:
-	GaussBlur(Tomo_Data *&, double sigma);
-	~GaussBlur(){};
-	void blur();
-
-private:
-	Tomo_Data *tD;
-	double sigma;
-
-	int size;
-	double *window;
+	static void blur(uchar *&src, uchar *&dst, float sigma, int width, int height);
 };

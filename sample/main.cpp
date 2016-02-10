@@ -2,7 +2,7 @@
 #include "tomoOGL.h"
 #include "hystogram.h"
 #include <QtGui/QApplication>
-#include <tomo_data.h>
+#include <TomoData.h>
 #include <QLabel>
 
 int main(int argc, char *argv[])

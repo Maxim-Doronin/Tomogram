@@ -29,9 +29,6 @@
     <ClCompile Include="..\..\..\src\tomo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tomo_data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_tomo.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -74,7 +71,10 @@
     <ClCompile Include="..\..\..\src\gaussBlur.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\sobelOperator.cpp">
+    <ClCompile Include="..\..\..\src\cannyOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tomoData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,16 +93,16 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\tomo_data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\statistic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\gaussBlur.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\sobelOperator.h">
+    <ClInclude Include="..\..\..\include\CannyOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\tomoData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

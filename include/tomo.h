@@ -9,12 +9,12 @@
 #include <QPushButton>
 #include <QCheckBox>
 #include <QString>
-#include "tomo_data.h"
+#include "TomoData.h"
 #include "tomoOGL.h"
 #include "hystogram.h"
 #include "statistic.h"
 #include "gaussBlur.h"
-#include "sobelOperator.h"
+#include "cannyOperator.h"
 
 
 class tomo : public QWidget
@@ -27,11 +27,10 @@ public:
 protected:
 	int _lay;			//количество слоев в прокрутке
 
-	Tomo_Data *tomoData;
+	TomoData *tomoData;
 	TomoOGL *tGL;
 	Hystogram *hysto;
 	Stats *stats;
-	GaussBlur *gB;
 
 	QHBoxLayout *layout;
 	QVBoxLayout *statistic;
@@ -46,6 +45,9 @@ protected:
 	QPushButton *go;
 	QCheckBox *gaussCheckBox;
 	QCheckBox *sobelCheckBox;
+	QCheckBox *nonMaxSuppBox;
+	QCheckBox *dbTresholdBox;
+	QCheckBox *tracingEdgBox;
 	QLabel *posPressed;
 	QPoint pointPressed;
 	QLabel *posReleased;
@@ -72,5 +74,8 @@ private slots:
 
 	void gaussCheckChanged(int);
 	void sobelCheckChanged(int);
+	void nonMaxSuppChanged(int);
+	void dbTresholdChanged(int);
+	void tracingEdgChanged(int);
 };
 
