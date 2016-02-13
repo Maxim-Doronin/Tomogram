@@ -19,24 +19,30 @@ struct Scale
 
 class TomoData
 {
-private:
-	uchar* transferFunction();
 public: 
 	DataSize dataSize;
 	Scale scale;
 	
 	short* data3D;				//исходные данные
 	uchar* data2D;				//отображаемые оттенки серого
-	double* dataDensityRectangle;
 
 	int lay;
 	int lowIdx;
 	int hiIdx;
+
+private:
+	uchar* transferFunction();
 public:
-	TomoData(char*);
+	TomoData(char* file);
 	virtual ~TomoData();
 	
-	uchar* getData2D();
+	int getLay() const;
+	int getLowIdx()const;
+	int getHiIdx()const;
 
-	void getDataDensity(int x1, int y1, int x2, int y2);
+	void setLay(int lay);
+	void setLowIdx(int lowIdx);
+	void setHiIdx(int hiIdx);
+
+	uchar* getData2D();
 };

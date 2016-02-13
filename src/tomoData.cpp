@@ -17,25 +17,56 @@ TomoData::TomoData(char* file)
 
 	fs.close();
 
-	data2D	 = 0;
-	dataDensityRectangle = 0;
+	data2D	= 0;
 
-	lay			 = 0;
-	lowIdx		 = 1900;
-	hiIdx		 = 2250;
+	lay		= 0;
+	lowIdx	= 1900;
+	hiIdx	= 2250;
 }
 
 TomoData::~TomoData()
 {
 	delete[] data3D;
 	delete[] data2D;
-	delete[] dataDensityRectangle;
+}
+
+int TomoData::getLay() const
+{
+	return lay;
+}
+	
+int TomoData::getLowIdx() const
+{
+	return lowIdx;
+}
+	
+int TomoData::getHiIdx() const
+{
+	return hiIdx;
+}
+
+void TomoData::setLay(int lay)
+{
+	if (lay < 0) 
+		this->lay = 0;
+	if (lay > dataSize.z - 1) 
+		this->lay = dataSize.z - 1;
+}
+	
+void TomoData::setLowIdx(int lowIdx)
+{
+	this->lowIdx = lowIdx;
+}
+	
+void TomoData::setHiIdx(int hiIdx)
+{
+	this->hiIdx = hiIdx;
 }
 
 uchar* TomoData::getData2D()
 {
-	if (data2D) delete data2D;
-	data2D = new uchar [dataSize.x * dataSize.y];
+	if (!data2D)
+		data2D = new uchar [dataSize.x * dataSize.y];
 	
 	if (lay < 0) lay = 0;
 	if (lay > dataSize.z - 1) lay = dataSize.z - 1;
@@ -63,27 +94,4 @@ uchar* TomoData::transferFunction()
 		data2D[i] = tint ;
 	}
 	return data2D;
-}
-
-void TomoData::getDataDensity(int x1, int y1, int x2, int y2)
-{
-	using namespace std;
-	if (lay < 0) lay = 0;
-	if (lay > dataSize.z - 1) lay = dataSize.z - 1;
-
-	if (dataDensityRectangle) delete dataDensityRectangle;
-	dataDensityRectangle = new double [25000];
-
-	for (int i = 0; i < 25000; i++)
-		dataDensityRectangle[i] = 0;
-	int count = 0;
-	for (int j = 0; j < dataSize.y; j++)
-		for (int i = 0; i < dataSize.x; i++)
-			if ((j >= min(y1, y2)) && (j <= max(y1, y2)) &&
-				(i >= min(x1, x2)) && (i <= max(x1, x2))) {
-				dataDensityRectangle[data3D[lay * dataSize.x * dataSize.y + j*dataSize.x + i]]++;
-				count++;
-			}	
-	for (int i = 0; i < 25000; i++)
-		dataDensityRectangle[i] /= count;
 }
