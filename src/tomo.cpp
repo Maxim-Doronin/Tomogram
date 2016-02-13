@@ -119,9 +119,9 @@ void tomo::wheelEvent(QWheelEvent *we)
 void tomo::lineLowChange(QString str)
 {
 	int _lowIdx = str.toInt();
-	if (_lowIdx <= tomoData->hiIdx){ 
+	if (_lowIdx <= tomoData->getHiIdx()){ 
 		go->setEnabled(true);
-		tomoData->lowIdx = _lowIdx;
+		tomoData->setLowIdx(_lowIdx);
 		sliderLeft->setValue(_lowIdx);}
 	else
 		go->setEnabled(false);
@@ -130,9 +130,9 @@ void tomo::lineLowChange(QString str)
 void tomo::lineHiChange(QString str)
 {
 	int _hiIdx = str.toInt();
-	if (tomoData->lowIdx <= _hiIdx){
+	if (tomoData->getLowIdx() <= _hiIdx){
 		go->setEnabled(true);
-		tomoData->hiIdx = _hiIdx;
+		tomoData->setHiIdx(_hiIdx);
 		sliderRight->setValue(_hiIdx);}
 	else
 		go->setEnabled(false);
@@ -145,33 +145,33 @@ void tomo::goClicked()
 
 void tomo::setRangeLeft(int _lowIdx)
 {
-	if (_lowIdx < tomoData->hiIdx){
-		tomoData->lowIdx = _lowIdx;
-		hysto->setLowIdx(tomoData->lowIdx);
+	if (_lowIdx < tomoData->getHiIdx()){
+		tomoData->setLowIdx(_lowIdx);
+		hysto->setLowIdx(_lowIdx);
 	}
 	else {
-		sliderLeft->setValue(tomoData->hiIdx - 1);
-		tomoData->lowIdx = tomoData->hiIdx - 1;
-		hysto->setLowIdx(tomoData->lowIdx);
+		sliderLeft->setValue(tomoData->getHiIdx() - 1);
+		tomoData->setLowIdx(tomoData->getHiIdx() - 1);
+		hysto->setLowIdx(tomoData->getLowIdx());
 	}
 	QString str;
-	lineLow->setText(str.setNum(tomoData->lowIdx));
+	lineLow->setText(str.setNum(tomoData->getLowIdx()));
 	dumpEvent();
 }
 
 void tomo::setRangeRight(int _hiIdx)
 {
-	if (_hiIdx > tomoData->lowIdx){
-		tomoData->hiIdx = _hiIdx;
-		hysto->setHiIdx(tomoData->hiIdx);
+	if (_hiIdx > tomoData->getLowIdx()){
+		tomoData->setHiIdx(_hiIdx);
+		hysto->setHiIdx(tomoData->getHiIdx());
 	}
 	else {
-		sliderRight->setValue(tomoData->lowIdx + 1);
-		tomoData->hiIdx = tomoData->lowIdx + 1;
-		hysto->setHiIdx(tomoData->hiIdx);
+		sliderRight->setValue(tomoData->getLowIdx() + 1);
+		tomoData->setHiIdx(tomoData->getLowIdx() + 1);
+		hysto->setHiIdx(tomoData->getHiIdx());
 	}
 	QString str;
-	lineHi->setText(str.setNum(tomoData->hiIdx));
+	lineHi->setText(str.setNum(tomoData->getHiIdx()));
 	dumpEvent();
 }
 
@@ -271,12 +271,13 @@ void tomo::dumpEvent(QWheelEvent *we)
 	int w = tomoData->dataSize.x;
 	int h = tomoData->dataSize.y;
 
-	if(we != 0)	tomoData->lay += (we->delta()/ (120/_lay));
-	tomoData->getData2D();
-	hysto->setLay(tomoData->lay);
+	if(we != 0)	
+		tomoData->setLay(tomoData->getLay() + (we->delta()/ (120/_lay)));
+
+	hysto->setLay(tomoData->getLay());
 	hysto->get_hysto(tomoData->data3D, w, h);
 
-	uchar *src = tomoData->data2D;
+	uchar *src = tomoData->getData2D();
 
 	float *ga = 0;
 
@@ -295,5 +296,6 @@ void tomo::dumpEvent(QWheelEvent *we)
 	
 	this->update();
 
-	if (!ga) delete []ga;
+	if (ga) delete []ga;
+	if (src != tomoData->data2D) delete []src;
 }
