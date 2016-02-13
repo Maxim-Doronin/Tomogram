@@ -25,12 +25,17 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	meanSquareDev = new QLabel(this);
 
 	lineLow = new QLineEdit;
+	lineLow->setText("1900");
 	lineHi  = new QLineEdit;
+	lineHi->setText("2250");
 	go		= new QPushButton("go!");
 	go->setDefault(true);
 	go->setEnabled(false);
 
 	gaussCheckBox = new QCheckBox("Gauss Blur");
+	gaussLineEdit = new QLineEdit("1.4");
+	sigma = 1.4;
+	gaussLineEdit->setFixedWidth(50);
 	
 	sobelCheckBox = new QCheckBox("Sobel Operator");
 	
@@ -39,6 +44,12 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	
 	dbTresholdBox = new QCheckBox("Double thresholding");
 	dbTresholdBox->setDisabled(true);
+	dbTresholdLR  = new QLineEdit("0.55");
+	leftThreshold = 0.55;
+	dbTresholdRR  = new QLineEdit("0.6");
+	rightThreshold = 0.6;
+	dbTresholdLR->setFixedWidth(50);
+	dbTresholdRR->setFixedWidth(50);
 	
 	tracingEdgBox = new QCheckBox("Tracing edges");
 	tracingEdgBox->setDisabled(true);
@@ -59,9 +70,12 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic = new QVBoxLayout;
 	statistic->addLayout(layout);
 	statistic->addWidget(gaussCheckBox);
+	statistic->addWidget(gaussLineEdit);
 	statistic->addWidget(sobelCheckBox);
 	statistic->addWidget(nonMaxSuppBox);
 	statistic->addWidget(dbTresholdBox);
+	statistic->addWidget(dbTresholdLR);
+	statistic->addWidget(dbTresholdRR);
 	statistic->addWidget(tracingEdgBox);
 
 	statistic->addWidget(posPressed);
@@ -99,9 +113,12 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
 	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
 	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
+	connect(gaussLineEdit, SIGNAL(textChanged(QString)), this, SLOT(gaussLineChanged(QString)));
 	connect(sobelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(sobelCheckChanged(int)));
 	connect(nonMaxSuppBox, SIGNAL(stateChanged(int)), this, SLOT(nonMaxSuppChanged(int)));
 	connect(dbTresholdBox, SIGNAL(stateChanged(int)), this, SLOT(dbTresholdChanged(int)));
+	connect(dbTresholdLR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdLRChanged(QString)));
+	connect(dbTresholdRR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdRRChanged(QString)));
 	connect(tracingEdgBox, SIGNAL(stateChanged(int)), this, SLOT(tracingEdgChanged(int)));
 }
 
@@ -229,10 +246,24 @@ void tomo::gaussCheckChanged(int flag)
 	dumpEvent();
 }
 
+void tomo::gaussLineChanged(QString str)
+{
+	float _sigma = str.toFloat();
+	if ((_sigma < 0) || (_sigma > 50))
+	{
+		gaussLineEdit->setText("1.4");
+		_sigma = 1.4;
+	}
+	sigma = _sigma;
+	dumpEvent();
+}
+
 void tomo::sobelCheckChanged(int flag)
 {
-	if (flag)
+	if (flag) {
 		nonMaxSuppBox->setDisabled(false);
+		nonMaxSuppChanged(nonMaxSuppBox->isChecked());
+	}
 	if (!flag) {
 		nonMaxSuppBox->setDisabled(true);
 		dbTresholdBox->setDisabled(true);
@@ -243,8 +274,10 @@ void tomo::sobelCheckChanged(int flag)
 
 void tomo::nonMaxSuppChanged(int flag)
 {
-	if (flag)
+	if (flag){
 		dbTresholdBox->setDisabled(false);
+		dbTresholdChanged(dbTresholdBox->isChecked());
+	}
 	if (!flag){
 		dbTresholdBox->setDisabled(true);
 		tracingEdgBox->setDisabled(true);
@@ -254,10 +287,40 @@ void tomo::nonMaxSuppChanged(int flag)
 
 void tomo::dbTresholdChanged(int flag)
 {
-	if (flag)
+	if (flag){
 		tracingEdgBox->setDisabled(false);
+		tracingEdgChanged(tracingEdgBox->isChecked());
+	}
 	if (!flag)
 		tracingEdgBox->setDisabled(true);
+	dumpEvent();
+}
+
+void tomo::dbTresholdLRChanged(QString str)
+{
+	float _leftThreshold = str.toFloat();
+	if (_leftThreshold < 0)
+	{
+		dbTresholdLR->setText("0");
+		_leftThreshold = 0;
+	}
+	if (_leftThreshold > rightThreshold)
+		_leftThreshold = rightThreshold;
+	leftThreshold = _leftThreshold;
+	dumpEvent();
+}
+
+void tomo::dbTresholdRRChanged(QString str)
+{
+	float _rightThreshold = str.toFloat();
+	if (_rightThreshold > 1)
+	{
+		dbTresholdRR->setText("1.0");
+		_rightThreshold = 1;
+	}
+	if (_rightThreshold < leftThreshold)
+		_rightThreshold = leftThreshold;
+	rightThreshold = _rightThreshold;
 	dumpEvent();
 }
 
@@ -282,13 +345,13 @@ void tomo::dumpEvent(QWheelEvent *we)
 	float *ga = 0;
 
 	if (gaussCheckBox->isChecked())
-		GaussBlur::blur(src, src, 1.4, w, h);
+		GaussBlur::blur(src, src, sigma, w, h);
 	if (sobelCheckBox->isChecked())
 		CannyOperator::sobel(src, src, ga, w, h);
 	if ((nonMaxSuppBox->isChecked())&&(nonMaxSuppBox->isEnabled()))
 		CannyOperator::nonMaxSuppression(src, ga, src, w, h);
 	if ((dbTresholdBox->isChecked())&&(dbTresholdBox->isEnabled()))
-		CannyOperator::doubleTresholding(src, src, 0.55, 0.6, w, h);
+		CannyOperator::doubleTresholding(src, src, leftThreshold, rightThreshold, w, h);
 	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
 		CannyOperator::tracingEdges(src, src, w, h);
 

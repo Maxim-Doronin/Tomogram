@@ -26,7 +26,10 @@ public:
 	~tomo();
 protected:
 	int _lay;			//количество слоев в прокрутке
-
+	float sigma;			//sigma-коэф. для фильтра Гаусса
+	float leftThreshold;
+	float rightThreshold;
+	
 	TomoData *tomoData;
 	TomoOGL *tGL;
 	Hystogram *hysto;
@@ -44,9 +47,12 @@ protected:
 	QLineEdit *lineHi;
 	QPushButton *go;
 	QCheckBox *gaussCheckBox;
+	QLineEdit *gaussLineEdit;
 	QCheckBox *sobelCheckBox;
 	QCheckBox *nonMaxSuppBox;
 	QCheckBox *dbTresholdBox;
+	QLineEdit *dbTresholdLR;
+	QLineEdit *dbTresholdRR;
 	QCheckBox *tracingEdgBox;
 	QLabel *posPressed;
 	QPoint pointPressed;
@@ -73,9 +79,12 @@ private slots:
 	void setMouseReleasePosition(int, int);
 
 	void gaussCheckChanged(int);
+	void gaussLineChanged(QString str);
 	void sobelCheckChanged(int);
 	void nonMaxSuppChanged(int);
 	void dbTresholdChanged(int);
+	void dbTresholdLRChanged(QString str);
+	void dbTresholdRRChanged(QString str);
 	void tracingEdgChanged(int);
 };
 
