@@ -47,10 +47,17 @@ int TomoData::getHiIdx() const
 
 void TomoData::setLay(int lay)
 {
-	if (lay < 0) 
+	if (lay < 0)
+	{ 
 		this->lay = 0;
+		return;
+	}
 	if (lay > dataSize.z - 1) 
+	{
 		this->lay = dataSize.z - 1;
+		return;
+	}
+	this->lay = lay;
 }
 	
 void TomoData::setLowIdx(int lowIdx)
