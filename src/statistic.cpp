@@ -10,6 +10,12 @@ Stats::Stats()
 	layValidity  = false;
 }
 
+Stats::~Stats()
+{
+	if (dataDensityRectangle)
+		delete [] dataDensityRectangle;
+}
+
 void Stats::setData(short *&data, int xSize, int ySize, int zSize)
 {
 	this->data3D = data;

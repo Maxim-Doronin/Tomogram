@@ -25,7 +25,6 @@ Hystogram::~Hystogram()
 	delete [] densityData;
 	delete customPlot;
 	delete vbox;
-	delete fossil;
 }
 
 void Hystogram::getDensityData(short *&src, int width, int height)

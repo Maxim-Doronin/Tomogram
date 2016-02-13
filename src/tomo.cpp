@@ -4,6 +4,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	: QWidget(parent)
 {
 	this->_lay = _lay;
+	src = 0;
 	
 	tomoData = new TomoData(file);
 	tomoData->getData2D();
@@ -125,6 +126,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 tomo::~tomo()
 {
+	if((src)&&(src != tomoData->data2D))
+		delete []src;
 	delete tomoData;
 }
 
@@ -239,6 +242,7 @@ void tomo::setMouseReleasePosition(int x, int y)
 	expValue->setText(expVal);
 	dispValue->setText(dispVal);
 	meanSquareDev->setText(meanSquareVal);
+
 }
 
 void tomo::gaussCheckChanged(int flag) 
@@ -340,7 +344,9 @@ void tomo::dumpEvent(QWheelEvent *we)
 	hysto->setLay(tomoData->getLay());
 	hysto->get_hysto(tomoData->data3D, w, h);
 
-	uchar *src = tomoData->getData2D();
+	if ((src) && (src != tomoData->data2D)) 
+		delete []src;
+	src = tomoData->getData2D();
 
 	float *ga = 0;
 
@@ -360,5 +366,4 @@ void tomo::dumpEvent(QWheelEvent *we)
 	this->update();
 
 	if (ga) delete []ga;
-	if (src != tomoData->data2D) delete []src;
 }

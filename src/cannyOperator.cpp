@@ -1,16 +1,16 @@
 #include "cannyOperator.h"
 
-
+uchar* gradMap(int *&src, int width, int height);
 void CannyOperator::sobel(uchar *&src, uchar *&dst, float *&ga, int width, int height)
 {
-	uchar G;
+	int G;
 	float dir;
 	int Gx, Gy;
 
 	if ((dst)&&(src != dst)) delete []dst;
 	if (ga)  delete []ga;
 	
-	uchar* tmp = new uchar [height * width];
+	int* tmp = new int [height * width];
 	ga  = new float [height * width];
 
 	for (int y = 1; y < height - 1; y++)
@@ -35,7 +35,26 @@ void CannyOperator::sobel(uchar *&src, uchar *&dst, float *&ga, int width, int h
 			tmp[width * y + x] = G;
 			ga[width * y + x]  = dir;
 		}
-	dst = tmp;
+	dst = gradMap(tmp, width, height);
+	delete [] tmp;
+}
+
+uchar* gradMap(int *&src, int width, int height)
+{
+	short tint;
+	short pixel;
+	short maxTint = 0;
+	uchar *tmp = new uchar [width * height];
+
+	for (int i=0; i < width * height; i++)
+		if (src[i] > maxTint) maxTint = src[i];
+	
+	for (int i=0; i < width * height; i++) {
+		pixel = src[i];
+		tint = ((double)pixel) / maxTint *255; 
+		tmp[i] = tint ;
+	}
+	return tmp;
 }
 
 void CannyOperator::nonMaxSuppression(uchar *&src, float *&ga, uchar *&dst, int width, int height)

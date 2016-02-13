@@ -5,7 +5,7 @@
 class Stats{
 public:
 	Stats();
-	~Stats(){};
+	~Stats();
 
 	void setData(short *&data, int xSize, int ySize, int zSize);
 	void setLay(int lay);

@@ -25,13 +25,14 @@ public:
 	tomo(int _lay, char*, QWidget *parent = 0);
 	~tomo();
 protected:
-	int _lay;			//количество слоев в прокрутке
+	int _lay;				//количество слоев в прокрутке
 	float sigma;			//sigma-коэф. для фильтра Гаусса
 	float leftThreshold;
 	float rightThreshold;
 	
 	TomoData *tomoData;
 	TomoOGL *tGL;
+	uchar *src;				//информация, отображаемая на экране
 	Hystogram *hysto;
 	Stats *stats;
 
