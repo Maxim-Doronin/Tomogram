@@ -13,7 +13,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	hysto->setLowIdx(1900);
 	hysto->setHiIdx(2250);
 	hysto->get_hysto(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y);
-	stats    = new Stats(tomoData);
+	stats    = new Stats();
+	stats->setData(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y, tomoData->dataSize.z);
+	stats->setLay(0);
 
 	posPressed    = new QLabel(this);
 	posReleased   = new QLabel(this);
@@ -200,10 +202,13 @@ void tomo::setMouseReleasePosition(int x, int y)
 	yStr.setNum(y);
 	str = xStr + ' ' + yStr;
 	
-	averVal.setNum(stats->averageDensity(x, y, pointPressed.x(), pointPressed.y()));
+	stats->setArea(x, y, pointPressed.x(), pointPressed.y());
+	stats->setLay(tomoData->lay);
+
+	averVal.setNum(stats->averageDensity());
 	averVal = "Average density: " + averVal;
 	
-	expVal.setNum(stats->expectedValue(x, y, pointPressed.x(), pointPressed.y()));
+	expVal.setNum(stats->expectedValue());
 	expVal  = "Expected value: " + expVal;
 	
 	dispVal.setNum(stats->dispersion());
