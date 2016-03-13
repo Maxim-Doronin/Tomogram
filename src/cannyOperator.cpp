@@ -173,3 +173,4 @@ void CannyOperator::tracingEdges(uchar *&src, uchar *&dst, int width, int height
 			if (dst[c] == 127) dst[c] = 0;
 		}
 }
+

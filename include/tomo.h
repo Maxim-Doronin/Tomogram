@@ -15,6 +15,7 @@
 #include "statistic.h"
 #include "gaussBlur.h"
 #include "cannyOperator.h"
+#include "rayCasting.h"
 
 
 class tomo : public QWidget
@@ -35,6 +36,7 @@ protected:
 	uchar *src;				//информация, отображаемая на экране
 	Hystogram *hysto;
 	Stats *stats;
+	RayCasting *rc;
 
 	QHBoxLayout *layout;
 	QVBoxLayout *statistic;
@@ -62,6 +64,7 @@ protected:
 	QLabel *expValue;
 	QLabel *dispValue;
 	QLabel *meanSquareDev;
+	QCheckBox *rayCastingBox;
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;
@@ -87,5 +90,6 @@ private slots:
 	void dbTresholdLRChanged(QString str);
 	void dbTresholdRRChanged(QString str);
 	void tracingEdgChanged(int);
+	void rayCastingChanged(int);
 };
 

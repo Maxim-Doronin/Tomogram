@@ -17,6 +17,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats    = new Stats();
 	stats->setData(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y, tomoData->dataSize.z);
 	stats->setLay(0);
+	rc = new RayCasting(tomoData);
+	rayCastingBox = new QCheckBox("Ray Casting");
 
 	posPressed    = new QLabel(this);
 	posReleased   = new QLabel(this);
@@ -86,6 +88,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic->addWidget(dispValue);
 	statistic->addWidget(meanSquareDev);
 
+	statistic->addWidget(rayCastingBox);
+
 	image = new QHBoxLayout;
 	image->addLayout(statistic);
 	image->addWidget(tGL);
@@ -121,6 +125,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(dbTresholdLR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdLRChanged(QString)));
 	connect(dbTresholdRR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdRRChanged(QString)));
 	connect(tracingEdgBox, SIGNAL(stateChanged(int)), this, SLOT(tracingEdgChanged(int)));
+	connect(rayCastingBox, SIGNAL(stateChanged(int)), this, SLOT(rayCastingChanged(int)));
 }
 
 
@@ -333,6 +338,11 @@ void tomo::tracingEdgChanged(int)
 	dumpEvent();
 }
 
+void tomo::rayCastingChanged(int flag)
+{
+	dumpEvent();
+}
+
 void tomo::dumpEvent(QWheelEvent *we)
 {	
 	int w = tomoData->dataSize.x;
@@ -360,6 +370,8 @@ void tomo::dumpEvent(QWheelEvent *we)
 		CannyOperator::doubleTresholding(src, src, leftThreshold, rightThreshold, w, h);
 	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
 		CannyOperator::tracingEdges(src, src, w, h);
+	if (rayCastingBox->isChecked())
+		rc->render();
 
 	tGL->upd(src, w, h);
 	

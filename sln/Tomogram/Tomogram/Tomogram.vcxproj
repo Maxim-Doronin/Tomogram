@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\..\src\hystogram.cpp" />
     <ClCompile Include="..\..\..\src\qcustomplot.cpp" />
     <ClCompile Include="..\..\..\src\cannyOperator.cpp" />
+    <ClCompile Include="..\..\..\src\rayCasting.cpp" />
     <ClCompile Include="..\..\..\src\statistic.cpp" />
     <ClCompile Include="..\..\..\src\tomo.cpp" />
     <ClCompile Include="..\..\..\src\tomoOGL.cpp" />
@@ -90,6 +91,7 @@
     </CustomBuild>
     <ClInclude Include="..\..\..\include\gaussBlur.h" />
     <ClInclude Include="..\..\..\include\CannyOperator.h" />
+    <ClInclude Include="..\..\..\include\rayCasting.h" />
     <ClInclude Include="..\..\..\include\statistic.h" />
     <ClInclude Include="..\..\..\include\tomoData.h" />
   </ItemGroup>
