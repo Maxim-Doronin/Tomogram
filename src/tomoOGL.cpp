@@ -39,7 +39,7 @@ void TomoOGL::paintGL()
     glLoadIdentity(); 
 
 	uchar tint;
-
+//#define POINTS
 #ifdef POINTS
 	glBegin(GL_POINTS);
 		for (int i = 0; i < width; i++)	
@@ -51,12 +51,12 @@ void TomoOGL::paintGL()
 			}
 	glEnd();
 #else
-	for (int i = 0; i < height - 1; i++){
+	for (int j = 0; j < height - 1; j++){
 		glBegin(GL_QUAD_STRIP);
-			for (int j = 0; j < width * 2; j++) {
-				tint = src[i * width + width * (j%2 == 0 ? 1 : 0) + j/2];
+			for (int i = 0; i < width * 2; i++) {
+				tint = src[j * width + width * (i%2 == 0 ? 1 : 0) + i/2];
 				glColor3ub(tint, tint, tint);
-				glVertex2i(j/2, j%2 == 0 ? i+1 : i);
+				glVertex2i(i/2, i%2 == 0 ? j+1 : j);
 			}
 		glEnd();
 	}
