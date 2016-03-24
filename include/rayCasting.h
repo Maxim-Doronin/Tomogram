@@ -20,17 +20,12 @@ struct RGBA {
 	float alpha;
 };
 
-struct Increments{
-	float dx;
-	float dy;
-	float dz;
-};
-
 struct Options
 {
 	unsigned int width;
 	unsigned int height;
-	float alpha;
+	float beta;
+	float radius;
 };
 
 class RayCasting {
@@ -49,7 +44,6 @@ private:
 	RGBA* frameBuffer;
 	RGBA* pixel;
 
-	Increments* inc;
 	void getInc(int x, int y);
 	
 	RGBA& ray(Vec3f, Vec3f, Options*, int , int);
