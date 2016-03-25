@@ -51,9 +51,13 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 
 	float radius = option->radius;
 	
-	while  ((curX <= -width / 2) || (curX >= width / 2 - 1) ||
-			(curY <= -depth / 2) || (curY >= depth / 2 - 1) ||
-			(curZ <= -height / 2) || (curZ >= height / 2 - 1))
+	int w = width / 2;
+	int h = height / 2;
+	int d = depth / 2;
+
+	while  ((curX <= -w) || (curX >= w - 1) ||
+			(curY <= -d) || (curY >= d - 1) ||
+			(curZ <= -h) || (curZ >= h - 1))
 	{
 		curX += dir.x * 5;
 		curY += dir.y * 5;
@@ -62,14 +66,14 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 			break;
 	}
 
-	while  ((curX > -width / 2) && (curX < width / 2 -1) &&
-			(curY > -depth / 2) && (curY < depth / 2 - 1) &&
-			(curZ > -height / 2) && (curZ < height / 2 - 1) &&
+	while  ((curX > -w) && (curX < w -1) &&
+			(curY > -d) && (curY < d - 1) &&
+			(curZ > -h) && (curZ < h - 1) &&
 			(color.alpha < 1 ))
 	{
-		int idX = width / 2 - floor(curX + 0.5);
-		int idY = depth / 2 + floor(curY + 0.5);
-		int idZ = height / 2 +floor(curZ + 0.5);
+		int idX = w - floor(curX + 0.5);
+		int idY = d + floor(curY + 0.5);
+		int idZ = h +floor(curZ + 0.5);
 		int id = depth * width * idZ + width * idY + idX;
 		short vertex = data->data3D[id];
 		if (vertex < 5000)
@@ -135,6 +139,6 @@ void RayCasting::render(float phi, float psi)
 			dir.z /= dirLength;
 
 			//*(pixel++) = ray(origin, dir, option);
-			data->data2D[j * depth + i] = ray(origin, dir, color, option, i, j).red;
+			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}
 }

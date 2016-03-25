@@ -12,13 +12,6 @@ struct Vec3f {
 	float z;
 };
 
-struct RGBA {
-	uchar red;
-	uchar green;
-	uchar blue;
-	float alpha;
-};
-
 struct Options
 {
 	unsigned int width;

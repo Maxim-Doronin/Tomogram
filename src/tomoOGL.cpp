@@ -3,12 +3,13 @@
 TomoOGL::TomoOGL(uchar*& src, int w, int h, QWidget *parent)
 	: QGLWidget(parent)
 {
-	this->src    = src;
+	this->srcWB    = src;
 	this->width  = w;
 	this->height = h;
 	setMinimumHeight(h+100);
 	setMinimumWidth(w+100);
 	rubberBand = 0;
+	isColor = 0;
 }
 
 TomoOGL::~TomoOGL()
@@ -39,34 +40,56 @@ void TomoOGL::paintGL()
     glLoadIdentity(); 
 
 	uchar tint;
+	RGBA pixel;
 //#define POINTS
 #ifdef POINTS
 	glBegin(GL_POINTS);
 		for (int i = 0; i < width; i++)	
 			for (int j = 0; j < height; j++)
 			{
-				tint = src[i * width + j];
+				tint = srcWB[i * width + j];
 				glColor3ub(tint, tint, tint);
 				glVertex2i(j, height - i);
 			}
 	glEnd();
 #else
-	for (int j = 0; j < height - 1; j++){
-		glBegin(GL_QUAD_STRIP);
-			for (int i = 0; i < width * 2; i++) {
-				tint = src[j * width + width * (i%2 == 0 ? 1 : 0) + i/2];
-				glColor3ub(tint, tint, tint);
-				glVertex2i(i/2, i%2 == 0 ? j+1 : j);
-			}
-		glEnd();
-	}
+	if (isColor)
+		for (int j = 0; j < height - 1; j++){
+			glBegin(GL_QUAD_STRIP);
+				for (int i = 0; i < width * 2; i++) {
+					pixel = srcRGBA[j * width + width * (i%2 == 0 ? 1 : 0) + i/2];
+					glColor4ub(pixel.red, pixel.green, pixel.blue, 255 * pixel.alpha);
+					glVertex2i(i/2, i%2 == 0 ? j+1 : j);
+				}
+			glEnd();
+		}
+	else
+		for (int j = 0; j < height - 1; j++){
+			glBegin(GL_QUAD_STRIP);
+				for (int i = 0; i < width * 2; i++) {
+					tint = srcWB[j * width + width * (i%2 == 0 ? 1 : 0) + i/2];
+					glColor3ub(tint, tint, tint);
+					glVertex2i(i/2, i%2 == 0 ? j+1 : j);
+				}
+			glEnd();
+		}
 #endif
 }
 
 void TomoOGL::upd(uchar*& src, int w, int h)
 {
-	this->src    = src;
+	isColor = 0;
+	this->srcWB    = src;
 	this->width  = w;
+	this->height = h;
+	updateGL();
+}
+
+void TomoOGL::upd(RGBA*& src, int w, int h)
+{
+	isColor = 1;
+	this->srcRGBA = src;
+	this->width = w;
 	this->height = h;
 	updateGL();
 }

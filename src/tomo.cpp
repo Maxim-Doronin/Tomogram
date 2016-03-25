@@ -386,9 +386,12 @@ void tomo::dumpEvent(QWheelEvent *we)
 	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
 		CannyOperator::tracingEdges(src, src, w, h);
 	if (rayCastingBox->isChecked())
+	{
 		rc->render(phi, psi);
-
-	tGL->upd(src, w, h);
+		tGL->upd(tomoData->dataColor2D, w, h);
+	}
+	else
+		tGL->upd(src, w, h);
 	
 	this->update();
 

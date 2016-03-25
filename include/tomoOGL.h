@@ -17,6 +17,7 @@ public:
 	~TomoOGL();
 
 	void upd(uchar*&, int, int);
+	void upd(RGBA*&, int, int);
 private:
 	void initializeGL();
 	void resizeGL(int width, int height);
@@ -29,9 +30,11 @@ private:
 	virtual void mousePressEvent(QMouseEvent *we);
 	virtual void mouseReleaseEvent(QMouseEvent *we);
 
-	uchar* src;
+	uchar* srcWB;
+	RGBA* srcRGBA;
 	int width;
 	int height;
+	int isColor;
 signals:
 	void mousePressed(int x, int y);
 	void mouseReleased(int x, int y);

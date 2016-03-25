@@ -18,6 +18,7 @@ TomoData::TomoData(char* file)
 	fs.close();
 
 	data2D	= 0;
+	dataColor2D = new RGBA [dataSize.x * dataSize.y];
 
 	lay		= 0;
 	lowIdx	= 1900;

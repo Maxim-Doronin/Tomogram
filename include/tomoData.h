@@ -3,6 +3,13 @@
 #include <cstdlib>
 #include <qglobal.h>
 
+struct RGBA {
+	uchar red;
+	uchar green;
+	uchar blue;
+	float alpha;
+};
+
 struct DataSize
 {
 	int x;
@@ -23,8 +30,9 @@ public:
 	DataSize dataSize;
 	Scale scale;
 	
-	short* data3D;				//исходные данные
-	uchar* data2D;				//отображаемые оттенки серого
+	short* data3D;			//исходные данные
+	uchar* data2D;			//отображаемые оттенки серого
+	RGBA*  dataColor2D;		//отображемое цветная картинка
 
 	int lay;
 	int lowIdx;
