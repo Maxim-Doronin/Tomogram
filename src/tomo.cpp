@@ -19,6 +19,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats->setLay(0);
 	rc = new RayCasting(tomoData);
 	rayCastingBox = new QCheckBox("Ray Casting");
+	phi = 0;
+	psi = 0;
 
 	posPressed    = new QLabel(this);
 	posReleased   = new QLabel(this);
@@ -139,6 +141,19 @@ tomo::~tomo()
 void tomo::wheelEvent(QWheelEvent *we)
 {
 	dumpEvent(we);
+}
+
+void tomo::keyPressEvent(QKeyEvent *pe)
+{
+	switch (pe->key()) {
+	case Qt::Key_D : { phi += 10; break; }
+	case Qt::Key_A : { phi -= 10; break; }
+	case Qt::Key_W : { psi += 10; break; }
+	case Qt::Key_S : { psi -= 10; break; }
+	
+	default: return;
+	}
+	dumpEvent();
 }
 
 void tomo::lineLowChange(QString str)
@@ -371,7 +386,7 @@ void tomo::dumpEvent(QWheelEvent *we)
 	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
 		CannyOperator::tracingEdges(src, src, w, h);
 	if (rayCastingBox->isChecked())
-		rc->render();
+		rc->render(phi, psi);
 
 	tGL->upd(src, w, h);
 	

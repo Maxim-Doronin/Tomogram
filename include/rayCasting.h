@@ -4,8 +4,7 @@
 #include <omp.h>
 #include <vector>
 #include <algorithm>
-
-#define M_PI 3.14159265358979323846
+#include <qmath.h>
 
 struct Vec3f {
 	float x;
@@ -30,9 +29,6 @@ struct Options
 
 class RayCasting {
 private:
-	float eyeDist;
-	float step;
-
 	int width;
 	int height;
 	int depth;
@@ -44,10 +40,9 @@ private:
 	RGBA* frameBuffer;
 	RGBA* pixel;
 
-	void getInc(int x, int y);
-	
-	RGBA& ray(Vec3f, Vec3f, Options*, int , int);
+	void calculateOrigin(Vec3f &origin, float phi, float psi);
+	RGBA& ray(Vec3f, Vec3f, RGBA&, Options*,  int , int);
 public:
 	RayCasting(TomoData *data);
-	void render();
+	void render(float phi, float psi);
 };
