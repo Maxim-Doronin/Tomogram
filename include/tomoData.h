@@ -3,6 +3,9 @@
 #include <cstdlib>
 #include <qglobal.h>
 
+#define minR 0
+#define maxR 4000
+
 struct RGBA {
 	uchar red;
 	uchar green;

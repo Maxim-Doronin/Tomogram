@@ -111,5 +111,8 @@
     <ClInclude Include="..\..\..\include\rayCasting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\colorData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

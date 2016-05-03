@@ -21,8 +21,8 @@ TomoData::TomoData(char* file)
 	dataColor2D = new RGBA [dataSize.x * dataSize.y];
 
 	lay		= 0;
-	lowIdx	= 1900;
-	hiIdx	= 2250;
+	lowIdx	= 2300;
+	hiIdx	= 4000;
 }
 
 TomoData::~TomoData()

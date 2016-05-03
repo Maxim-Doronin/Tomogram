@@ -8,17 +8,20 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	
 	tomoData = new TomoData(file);
 	tomoData->getData2D();
+	//CannyOperator::sobel3D(tomoData);
 	tGL		 = new TomoOGL(tomoData->data2D, tomoData->dataSize.x, tomoData->dataSize.y);
+	
 	hysto    = new Hystogram();
 	hysto->setLay(0);
-	hysto->setLowIdx(1900);
-	hysto->setHiIdx(2250);
+	hysto->setLowIdx(2300);
+	hysto->setHiIdx(4000);
 	hysto->get_hysto(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y);
+	
 	stats    = new Stats();
 	stats->setData(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y, tomoData->dataSize.z);
 	stats->setLay(0);
-	rc = new RayCasting(tomoData);
 	rayCastingBox = new QCheckBox("Ray Casting");
+	rayCastingBox->setChecked(false);
 	phi = 0;
 	psi = 0;
 
@@ -30,9 +33,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	meanSquareDev = new QLabel(this);
 
 	lineLow = new QLineEdit;
-	lineLow->setText("1900");
+	lineLow->setText("2300");
 	lineHi  = new QLineEdit;
-	lineHi->setText("2250");
+	lineHi->setText("4000");
 	go		= new QPushButton("go!");
 	go->setDefault(true);
 	go->setEnabled(false);
@@ -51,21 +54,37 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	dbTresholdBox->setDisabled(true);
 	dbTresholdLR  = new QLineEdit("0.55");
 	leftThreshold = 0.55;
+	dbTresholdLRSl = new QSlider(Qt::Horizontal);
+	dbTresholdLRSl->setRange(0, 100);
+	dbTresholdLRSl->setValue(55);
+
 	dbTresholdRR  = new QLineEdit("0.6");
 	rightThreshold = 0.6;
-	dbTresholdLR->setFixedWidth(50);
-	dbTresholdRR->setFixedWidth(50);
+
+	dbTresholdRRSl = new QSlider(Qt::Horizontal);
+	dbTresholdRRSl->setRange(0, 100);
+	dbTresholdRRSl->setValue(60);
 	
+	tresholdBut = new QPushButton("go!");
+	tresholds = new QHBoxLayout;
+	tresholds->addWidget(dbTresholdLR);
+	tresholds->addWidget(dbTresholdRR);
+	tresholds->addWidget(tresholdBut);
+
 	tracingEdgBox = new QCheckBox("Tracing edges");
 	tracingEdgBox->setDisabled(true);
 
 	sliderLeft = new QSlider(Qt::Horizontal);
-	sliderLeft->setRange(1800, 2500);
-	sliderLeft->setValue(1900);
+	sliderLeft->setRange(minR, maxR);
+	sliderLeft->setValue(2300);
 	
+	sliderMid = new QSlider(Qt::Horizontal);
+	sliderMid->setRange(minR, maxR);
+	sliderMid->setValue(3150);
+
 	sliderRight = new QSlider(Qt::Horizontal);
-	sliderRight->setRange(1800, 2500);
-	sliderRight->setValue(2250);
+	sliderRight->setRange(minR, maxR);
+	sliderRight->setValue(4000);
 
 	layout = new QHBoxLayout;
 	layout->addWidget(lineLow);
@@ -79,8 +98,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	statistic->addWidget(sobelCheckBox);
 	statistic->addWidget(nonMaxSuppBox);
 	statistic->addWidget(dbTresholdBox);
-	statistic->addWidget(dbTresholdLR);
-	statistic->addWidget(dbTresholdRR);
+	statistic->addLayout(tresholds);
+	statistic->addWidget(dbTresholdLRSl);
+	statistic->addWidget(dbTresholdRRSl);
 	statistic->addWidget(tracingEdgBox);
 
 	statistic->addWidget(posPressed);
@@ -99,6 +119,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	sliders = new QVBoxLayout;
 	sliders->addWidget(sliderLeft);
 	sliders->addWidget(sliderRight);
+	sliders->addWidget(sliderMid);
 	sliders->setMargin(20);
 	marginLeft = new QVBoxLayout;
 	marginLeft->setMargin(15);
@@ -116,6 +137,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(lineHi, SIGNAL(textChanged(QString)), this, SLOT(lineHiChange(QString)));
 	connect(go, SIGNAL(clicked()), this, SLOT(goClicked()));
 	connect(sliderLeft, SIGNAL(valueChanged(int)), this, SLOT(setRangeLeft(int)));
+	connect(sliderMid, SIGNAL(valueChanged(int)), this, SLOT(setRangeMid(int)));
 	connect(sliderRight, SIGNAL(valueChanged(int)), this, SLOT(setRangeRight(int)));
 	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
 	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
@@ -126,8 +148,13 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(dbTresholdBox, SIGNAL(stateChanged(int)), this, SLOT(dbTresholdChanged(int)));
 	connect(dbTresholdLR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdLRChanged(QString)));
 	connect(dbTresholdRR, SIGNAL(textChanged(QString)), this, SLOT(dbTresholdRRChanged(QString)));
+	connect(dbTresholdLRSl, SIGNAL(valueChanged(int)), this, SLOT(TresholdLeftChangeSl(int)));
+	connect(dbTresholdRRSl, SIGNAL(valueChanged(int)), this, SLOT(TresholdRightChangeSl(int)));
+	connect(tresholdBut, SIGNAL(clicked()), this, SLOT(tresholdClick()));
 	connect(tracingEdgBox, SIGNAL(stateChanged(int)), this, SLOT(tracingEdgChanged(int)));
 	connect(rayCastingBox, SIGNAL(stateChanged(int)), this, SLOT(rayCastingChanged(int)));
+
+	dumpEvent();
 }
 
 
@@ -150,36 +177,35 @@ void tomo::keyPressEvent(QKeyEvent *pe)
 	case Qt::Key_A : { phi -= 10; break; }
 	case Qt::Key_W : { psi += 10; break; }
 	case Qt::Key_S : { psi -= 10; break; }
-	
-	default: return;
-	}
+	default: return; }
+
 	dumpEvent();
 }
 
 void tomo::lineLowChange(QString str)
 {
 	int _lowIdx = str.toInt();
-	if (_lowIdx <= tomoData->getHiIdx()){ 
-		go->setEnabled(true);
-		tomoData->setLowIdx(_lowIdx);
-		sliderLeft->setValue(_lowIdx);}
-	else
+	tomoData->setLowIdx(_lowIdx);
+	if (tomoData->lowIdx >= tomoData->hiIdx)
 		go->setEnabled(false);
+	else
+		go->setEnabled(true);
 }
 
 void tomo::lineHiChange(QString str)
 {
 	int _hiIdx = str.toInt();
-	if (tomoData->getLowIdx() <= _hiIdx){
-		go->setEnabled(true);
-		tomoData->setHiIdx(_hiIdx);
-		sliderRight->setValue(_hiIdx);}
-	else
+	tomoData->setHiIdx(_hiIdx);
+	if (tomoData->lowIdx >= tomoData->hiIdx)
 		go->setEnabled(false);
+	else
+		go->setEnabled(true);
 }
 
 void tomo::goClicked()
 {
+	sliderRight->setValue(tomoData->hiIdx);
+	sliderLeft->setValue(tomoData->lowIdx);
 	dumpEvent();
 }
 
@@ -195,7 +221,26 @@ void tomo::setRangeLeft(int _lowIdx)
 		hysto->setLowIdx(tomoData->getLowIdx());
 	}
 	QString str;
-	lineLow->setText(str.setNum(tomoData->getLowIdx()));
+	str.setNum(tomoData->getLowIdx());
+	lineLow->setText(str);
+
+	int _midIdx = (tomoData->getHiIdx() + tomoData->getLowIdx())/2;
+	sliderMid->setValue(_midIdx);
+
+	dumpEvent();
+}
+
+void tomo::setRangeMid(int _midIdx)
+{
+	int delta = _midIdx - (tomoData->getHiIdx() + tomoData->getLowIdx())/2;
+	int _lowIdx = tomoData->getLowIdx() + delta;
+	int _hiIdx = tomoData->getHiIdx() + delta;
+	sliderLeft->setValue(_lowIdx);
+	sliderRight->setValue(_hiIdx);
+	tomoData->setLowIdx(_lowIdx);
+	hysto->setLowIdx(_lowIdx);
+	tomoData->setHiIdx(_hiIdx);
+	hysto->setHiIdx(_hiIdx);
 	dumpEvent();
 }
 
@@ -211,7 +256,12 @@ void tomo::setRangeRight(int _hiIdx)
 		hysto->setHiIdx(tomoData->getHiIdx());
 	}
 	QString str;
-	lineHi->setText(str.setNum(tomoData->getHiIdx()));
+	str.setNum(tomoData->getHiIdx());
+	lineHi->setText(str);
+
+	int _midIdx = (tomoData->getHiIdx() + tomoData->getLowIdx())/2;
+	sliderMid->setValue(_midIdx);
+
 	dumpEvent();
 }
 
@@ -303,8 +353,8 @@ void tomo::nonMaxSuppChanged(int flag)
 		dbTresholdChanged(dbTresholdBox->isChecked());
 	}
 	if (!flag){
-		dbTresholdBox->setDisabled(true);
-		tracingEdgBox->setDisabled(true);
+		dbTresholdBox->setDisabled(false);
+		tracingEdgBox->setDisabled(false);
 	}
 	dumpEvent();
 }
@@ -323,28 +373,69 @@ void tomo::dbTresholdChanged(int flag)
 void tomo::dbTresholdLRChanged(QString str)
 {
 	float _leftThreshold = str.toFloat();
-	if (_leftThreshold < 0)
+	leftThreshold = _leftThreshold;
+	if (leftThreshold < 0)
 	{
 		dbTresholdLR->setText("0");
-		_leftThreshold = 0;
+		leftThreshold = 0;
 	}
-	if (_leftThreshold > rightThreshold)
-		_leftThreshold = rightThreshold;
-	leftThreshold = _leftThreshold;
+	if (leftThreshold >= rightThreshold)
+		tresholdBut->setEnabled(false);
+	else
+		tresholdBut->setEnabled(true);
+}
+
+void tomo::TresholdLeftChangeSl(int val)
+{
+	float _leftThreshold = (float)val / 100;
+	if (_leftThreshold < rightThreshold){
+		leftThreshold = _leftThreshold;
+	}
+	else {
+		dbTresholdLRSl->setValue(rightThreshold - 0.01);
+		leftThreshold = rightThreshold - 0.01;
+	}
+	QString text;
+	text.setNum(leftThreshold);
+	dbTresholdLR->setText(text);
 	dumpEvent();
 }
 
 void tomo::dbTresholdRRChanged(QString str)
 {
 	float _rightThreshold = str.toFloat();
-	if (_rightThreshold > 1)
+	rightThreshold = _rightThreshold;
+	if (rightThreshold > 1)
 	{
 		dbTresholdRR->setText("1.0");
-		_rightThreshold = 1;
+		rightThreshold = 1.0;
 	}
-	if (_rightThreshold < leftThreshold)
-		_rightThreshold = leftThreshold;
-	rightThreshold = _rightThreshold;
+	if (leftThreshold >= rightThreshold)
+		tresholdBut->setEnabled(false);
+	else
+		tresholdBut->setEnabled(true);
+}
+
+void tomo::TresholdRightChangeSl(int val)
+{
+	float _rightThreshold = (float)val / 100;
+	if (_rightThreshold > leftThreshold){
+		rightThreshold = _rightThreshold;
+	}
+	else {
+		dbTresholdRRSl->setValue(leftThreshold + 0.01);
+		rightThreshold = leftThreshold + 0.01;
+	}
+	QString text;
+	text.setNum(rightThreshold);
+	dbTresholdRR->setText(text);
+	dumpEvent();
+}
+
+void tomo::tresholdClick()
+{
+	dbTresholdRRSl->setValue(rightThreshold * 100);
+	dbTresholdLRSl->setValue(leftThreshold * 100);
 	dumpEvent();
 }
 
@@ -385,10 +476,15 @@ void tomo::dumpEvent(QWheelEvent *we)
 		CannyOperator::doubleTresholding(src, src, leftThreshold, rightThreshold, w, h);
 	if ((tracingEdgBox->isChecked())&&(tracingEdgBox->isEnabled()))
 		CannyOperator::tracingEdges(src, src, w, h);
+	
+	
+
 	if (rayCastingBox->isChecked())
 	{
+		rc = new RayCasting(tomoData, tomoData->lowIdx, tomoData->hiIdx);
 		rc->render(phi, psi);
 		tGL->upd(tomoData->dataColor2D, w, h);
+		delete rc;
 	}
 	else
 		tGL->upd(src, w, h);

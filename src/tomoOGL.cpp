@@ -6,8 +6,8 @@ TomoOGL::TomoOGL(uchar*& src, int w, int h, QWidget *parent)
 	this->srcWB    = src;
 	this->width  = w;
 	this->height = h;
-	setMinimumHeight(h+100);
-	setMinimumWidth(w+100);
+	setMinimumHeight(h + 300);
+	setMinimumWidth(w + 300);
 	rubberBand = 0;
 	isColor = 0;
 }

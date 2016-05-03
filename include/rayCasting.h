@@ -6,10 +6,17 @@
 #include <algorithm>
 #include <qmath.h>
 
-struct Vec3f {
+class Vec3f {
+public:
 	float x;
 	float y;
 	float z;
+	float alpha;
+	
+	float getLength();
+	void normalize();
+	float scalarMult(const Vec3f &vec);
+	float getCos(Vec3f &vec);
 };
 
 struct Options
@@ -18,6 +25,8 @@ struct Options
 	unsigned int height;
 	float beta;
 	float radius;
+	int minRange;
+	int maxRange;
 };
 
 class RayCasting {
@@ -25,17 +34,20 @@ private:
 	int width;
 	int height;
 	int depth;
+	int volumeRadius;
 
 	TomoData *data;
 	Options *option;
 	RGBA* rgba;
-	
-	RGBA* frameBuffer;
-	RGBA* pixel;
 
 	void calculateOrigin(Vec3f &origin, float phi, float psi);
+	Vec3f calculateGradient(float x, float y, float z);
+	inline ushort getDensity(int x, int y, int z);
+	ushort interpolation(float x, float y, float z);
 	RGBA& ray(Vec3f, Vec3f, RGBA&, Options*,  int , int);
+
 public:
-	RayCasting(TomoData *data);
+	RayCasting(TomoData *data, int minRange, int maxRange);
+	~RayCasting();
 	void render(float phi, float psi);
 };

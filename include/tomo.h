@@ -41,6 +41,7 @@ protected:
 	float phi, psi;
 
 	QHBoxLayout *layout;
+	QHBoxLayout *tresholds;
 	QVBoxLayout *statistic;
 	QHBoxLayout *image;
 	QVBoxLayout *sliders;
@@ -55,9 +56,14 @@ protected:
 	QLineEdit *gaussLineEdit;
 	QCheckBox *sobelCheckBox;
 	QCheckBox *nonMaxSuppBox;
+
 	QCheckBox *dbTresholdBox;
 	QLineEdit *dbTresholdLR;
+	QSlider *dbTresholdLRSl;
+	QSlider *dbTresholdRRSl;
 	QLineEdit *dbTresholdRR;
+	QPushButton *tresholdBut;
+
 	QCheckBox *tracingEdgBox;
 	QLabel *posPressed;
 	QPoint pointPressed;
@@ -70,6 +76,7 @@ protected:
 
 	QSlider *sliderLeft;
 	QSlider *sliderRight;
+	QSlider *sliderMid;
 
 	void dumpEvent(QWheelEvent *we = 0);
 	virtual void wheelEvent(QWheelEvent *we);
@@ -81,6 +88,7 @@ private slots:
 	void lineHiChange(QString str);
 
 	void setRangeLeft(int);
+	void setRangeMid(int);
 	void setRangeRight(int);
 	void setMousePressPosition(int, int);
 	void setMouseReleasePosition(int, int);
@@ -92,6 +100,10 @@ private slots:
 	void dbTresholdChanged(int);
 	void dbTresholdLRChanged(QString str);
 	void dbTresholdRRChanged(QString str);
+	void TresholdLeftChangeSl(int);
+	void TresholdRightChangeSl(int);
+	void tresholdClick();
+
 	void tracingEdgChanged(int);
 	void rayCastingChanged(int);
 };
