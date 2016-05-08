@@ -14,8 +14,6 @@
     <ClCompile Include="..\..\..\sample\main.cpp" />
     <ClCompile Include="..\..\..\src\hystogram.cpp" />
     <ClCompile Include="..\..\..\src\qcustomplot.cpp" />
-    <ClCompile Include="..\..\..\src\rayCasting.cpp" />
-    <ClCompile Include="..\..\..\src\statistic.cpp" />
     <ClCompile Include="..\..\..\src\tomo.cpp" />
     <ClCompile Include="..\..\..\src\tomoOGL.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_hystogram.cpp">
@@ -86,9 +84,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_OPENGL_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I.\..\..\..\include" "-I$(QTDIR)\include\QtOpenGL"</Command>
     </CustomBuild>
-    <ClInclude Include="..\..\..\include\colorData.h" />
-    <ClInclude Include="..\..\..\include\rayCasting.h" />
-    <ClInclude Include="..\..\..\include\statistic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A50293C7-A6A5-475B-BED5-6448D44E8C46}</ProjectGuid>
@@ -139,7 +134,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;../Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;QtGuid4.lib;QtOpenGLd4.lib;opengl32.lib;glu32.lib;tomoData.lib;%(AdditionalDependencies);CannyOperator.lib;GaussBlur.lib</AdditionalDependencies>
+      <AdditionalDependencies>qtmaind.lib;QtCored4.lib;QtGuid4.lib;QtOpenGLd4.lib;opengl32.lib;glu32.lib;tomoData.lib;%(AdditionalDependencies);CannyOperator.lib;GaussBlur.lib;RayCasting.lib;Statistics.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -158,7 +153,7 @@
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <AdditionalLibraryDirectories>$(QTDIR)\lib;../Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;tomoData.lib;%(AdditionalDependencies);CannyOperator.lib;GaussBlur.lib</AdditionalDependencies>
+      <AdditionalDependencies>qtmain.lib;QtCore4.lib;QtGui4.lib;QtOpenGL4.lib;opengl32.lib;glu32.lib;tomoData.lib;%(AdditionalDependencies);CannyOperator.lib;GaussBlur.lib;RayCasting.lib;Statistics.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

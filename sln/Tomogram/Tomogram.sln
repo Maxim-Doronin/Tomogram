@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CannyOperator", "CannyOpera
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GaussBlur", "GaussBlur\GaussBlur.vcxproj", "{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RayCasting", "RayCasting\RayCasting.vcxproj", "{04C1C3A8-09DE-4550-B112-C70E2E0150FA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Statistics", "Statistics\Statistics.vcxproj", "{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -31,6 +35,14 @@ Global
 		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Debug|Win32.Build.0 = Debug|Win32
 		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Release|Win32.ActiveCfg = Release|Win32
 		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Release|Win32.Build.0 = Release|Win32
+		{04C1C3A8-09DE-4550-B112-C70E2E0150FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{04C1C3A8-09DE-4550-B112-C70E2E0150FA}.Debug|Win32.Build.0 = Debug|Win32
+		{04C1C3A8-09DE-4550-B112-C70E2E0150FA}.Release|Win32.ActiveCfg = Release|Win32
+		{04C1C3A8-09DE-4550-B112-C70E2E0150FA}.Release|Win32.Build.0 = Release|Win32
+		{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}.Debug|Win32.Build.0 = Debug|Win32
+		{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}.Release|Win32.ActiveCfg = Release|Win32
+		{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

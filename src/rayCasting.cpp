@@ -2,7 +2,7 @@
 
 inline float deg2rad(const float &deg) 
 { 
-	return deg * M_PI / 180; 
+	return deg * pi / 180; 
 } 
 
 float Vec3f::getLength()
@@ -103,7 +103,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 	int h = height / 2;
 	int d = depth / 2;
 
-	while  ((curX <= 0) || (curX >= w - 1) ||
+	while  ((curX <= -w) || (curX >= w - 1) ||
 			(curY <= -d) || (curY >= d - 1) ||
 			(curZ <= -h) || (curZ >= h - 1))
 	{
@@ -114,7 +114,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 			break;
 	}
 
-	while  ((curX > -w) && (curX < w -1) &&
+	while  ((curX > -w) && (curX < w - 1) &&
 			(curY > -d) && (curY < d - 1) &&
 			(curZ > -h) && (curZ < h - 1) &&
 			(color.alpha < 1 ))
@@ -218,9 +218,9 @@ void RayCasting::render(float phi, float psi)
 			dir.z = -sin(psi) - y * cos(psi);
 
 			dir.normalize();
-			dir.x /= 1;
-			dir.y /= 1;
-			dir.z /= 1;
+			dir.x /= 2;
+			dir.y /= 2;
+			dir.z /= 2;
 
 			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}

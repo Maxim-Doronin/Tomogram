@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "TomoData.h"
 
+#define scaleWindow 100
 
 class TomoOGL : public QGLWidget
 {

@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}</ProjectGuid>
+    <ProjectGuid>{04C1C3A8-09DE-4550-B112-C70E2E0150FA}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CannyOperator</RootNamespace>
+    <RootNamespace>RayCasting</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -59,11 +59,14 @@
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>MaxSpeedHighLevel</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../../include</AdditionalIncludeDirectories>
+      <OpenMP>GenerateParallelCode</OpenMP>
+      <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
+      <Parallelization>true</Parallelization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,10 +79,10 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\CannyOperator.h" />
+    <ClInclude Include="..\..\..\include\rayCasting.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\cannyOperator.cpp" />
+    <ClCompile Include="..\..\..\src\rayCasting.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

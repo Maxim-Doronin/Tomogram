@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}</ProjectGuid>
+    <ProjectGuid>{1EF6D08B-FBBB-40E4-B705-5B176414DF9E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CannyOperator</RootNamespace>
+    <RootNamespace>Statistics</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,10 +76,10 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\CannyOperator.h" />
+    <ClInclude Include="..\..\..\include\statistic.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\cannyOperator.cpp" />
+    <ClCompile Include="..\..\..\src\statistic.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

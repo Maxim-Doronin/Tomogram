@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 typedef unsigned char uchar;
+typedef unsigned short ushort;
 #define minR 0
 #define maxR 4000
 
