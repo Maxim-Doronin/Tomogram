@@ -181,7 +181,7 @@ void CannyOperator::tracingEdges(uchar *&src, uchar *&dst, int width, int height
 		}
 }
 
-void CannyOperator::sobel3D(TomoData *&src)
+/*void CannyOperator::sobel3D(TomoData *&src)
 {
 	int G;
 	float dir;
@@ -227,7 +227,7 @@ void CannyOperator::sobel3D(TomoData *&src)
 				n[24] = src->data3D[depth * width * (z-1) + width * (y  ) + x-1];
 				n[25] = src->data3D[depth * width * (z-1) + width * (y+1) + x-1];
 
-				/*for (int i = 0; i < 26; i++)
+				for (int i = 0; i < 26; i++)
 				{
 					if (n[i] <= src->lowIdx)
 					{
@@ -239,7 +239,7 @@ void CannyOperator::sobel3D(TomoData *&src)
 						n[i] = src->hiIdx;
 						continue;
 					}
-				}*/
+				}
 
 				Gx = (n[6] + 3*n[7] + n[8] + 3*n[14] + 6*n[15] + 3*n[16] + n[23] + 3*n[24] + n[25]) 
 					-(n[0] + 3*n[1] + n[2] + 3*n[9] + 6*n[10] + 3*n[11] + n[17] + 3*n[18] + n[19]);
@@ -257,4 +257,4 @@ void CannyOperator::sobel3D(TomoData *&src)
 				src->data3D[depth * width * (z) + width * (y) + x] = tmp[depth * width * (z) + width * (y) + x];
 	delete []tmp;
 	delete []n;
-}
+}*/

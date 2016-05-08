@@ -22,7 +22,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats->setLay(0);
 	rayCastingBox = new QCheckBox("Ray Casting");
 	rayCastingBox->setChecked(false);
-	phi = 0;
+	phi = 45;
 	psi = 0;
 
 	posPressed    = new QLabel(this);
@@ -206,7 +206,6 @@ void tomo::goClicked()
 {
 	sliderRight->setValue(tomoData->hiIdx);
 	sliderLeft->setValue(tomoData->lowIdx);
-	dumpEvent();
 }
 
 void tomo::setRangeLeft(int _lowIdx)

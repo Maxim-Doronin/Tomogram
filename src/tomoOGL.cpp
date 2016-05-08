@@ -3,11 +3,11 @@
 TomoOGL::TomoOGL(uchar*& src, int w, int h, QWidget *parent)
 	: QGLWidget(parent)
 {
-	this->srcWB    = src;
+	this->srcWB  = src;
 	this->width  = w;
 	this->height = h;
-	setMinimumHeight(h + 300);
-	setMinimumWidth(w + 300);
+	setMinimumHeight(h + scaleWindow);
+	setMinimumWidth(w + scaleWindow);
 	rubberBand = 0;
 	isColor = 0;
 }
@@ -105,22 +105,15 @@ void TomoOGL::mousePressEvent(QMouseEvent *we)
 	if (!rubberBand)
 		rubberBand = new QRubberBand(QRubberBand::Rectangle, this);
 	rubberBand->hide();
-	//QPalette palette;
-	//palette.setBrush(QPalette::Window, QBrush(QColor(0,0,0,0)));
-	//palette.setBrush(QPalette::Highlight, QBrush(QColor(1,1,1,1)));
-	//palette.setBrush(QPalette::Base, QBrush(Qt::red));
-	//rubberBand->setPalette(palette);
-	//rubberBand->setWindowOpacity(0.0);
-	//rubberBand->setWindowFlags(Qt::ToolTip);
 	rubberBand->setGeometry(QRect(origin, QSize()));
 	rubberBand->show();
-	emit mousePressed(we->x(), we->y());
+	emit mousePressed(we->x() * width / (width + scaleWindow), we->y() * height / (height + scaleWindow));
 }
 
 void TomoOGL::mouseReleaseEvent(QMouseEvent *we)
 {
 	rubberBand->hide();
-	emit mouseReleased(we->x(), we->y());
+	emit mouseReleased(we->x() * width / (width + scaleWindow), we->y() * height / (height + scaleWindow));
 }
 
 

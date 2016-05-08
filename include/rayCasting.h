@@ -4,7 +4,8 @@
 #include <omp.h>
 #include <vector>
 #include <algorithm>
-#include <qmath.h>
+
+#define pi 3.14159265358979323846
 
 class Vec3f {
 public:

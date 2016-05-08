@@ -2,7 +2,7 @@
 
 inline float deg2rad(const float &deg) 
 { 
-	return deg * M_PI / 180; 
+	return deg * pi / 180; 
 } 
 
 float Vec3f::getLength()
@@ -114,7 +114,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 			break;
 	}
 
-	while  ((curX > -w) && (curX < w -1) &&
+	while  ((curX > -w) && (curX < w - 1) &&
 			(curY > -d) && (curY < d - 1) &&
 			(curZ > -h) && (curZ < h - 1) &&
 			(color.alpha < 1 ))
@@ -218,9 +218,9 @@ void RayCasting::render(float phi, float psi)
 			dir.z = -sin(psi) - y * cos(psi);
 
 			dir.normalize();
-			dir.x /= 4;
-			dir.y /= 4;
-			dir.z /= 4;
+			dir.x /= 2;
+			dir.y /= 2;
+			dir.z /= 2;
 
 			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}
@@ -232,4 +232,5 @@ void RayCasting::render(float phi, float psi)
 //построить изоповерхность? добавить слайдер-порог изоповерхности
 //изоповерхности
 //оптимизированная формула для градиента
-//TODO: fix non-maximum supresiion
+//DONE TODO: fix non-maximum supresiion 
+//TODO: non-recursive implementation in tracing edges
