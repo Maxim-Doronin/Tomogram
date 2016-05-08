@@ -1,8 +1,8 @@
 #pragma once
 #include <fstream>
 #include <cstdlib>
-#include <qglobal.h>
 
+typedef unsigned char uchar;
 #define minR 0
 #define maxR 4000
 

@@ -22,7 +22,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats->setLay(0);
 	rayCastingBox = new QCheckBox("Ray Casting");
 	rayCastingBox->setChecked(false);
-	phi = 0;
+	phi = -90;
 	psi = 0;
 
 	posPressed    = new QLabel(this);

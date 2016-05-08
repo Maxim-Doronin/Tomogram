@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tomogram", "Tomogram\Tomogram.vcxproj", "{A50293C7-A6A5-475B-BED5-6448D44E8C46}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tomoData", "tomoData\tomoData.vcxproj", "{7F161D00-4F63-44B8-B4A8-B512F10A2263}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CannyOperator", "CannyOperator\CannyOperator.vcxproj", "{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GaussBlur", "GaussBlur\GaussBlur.vcxproj", "{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +19,18 @@ Global
 		{A50293C7-A6A5-475B-BED5-6448D44E8C46}.Debug|Win32.Build.0 = Debug|Win32
 		{A50293C7-A6A5-475B-BED5-6448D44E8C46}.Release|Win32.ActiveCfg = Release|Win32
 		{A50293C7-A6A5-475B-BED5-6448D44E8C46}.Release|Win32.Build.0 = Release|Win32
+		{7F161D00-4F63-44B8-B4A8-B512F10A2263}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7F161D00-4F63-44B8-B4A8-B512F10A2263}.Debug|Win32.Build.0 = Debug|Win32
+		{7F161D00-4F63-44B8-B4A8-B512F10A2263}.Release|Win32.ActiveCfg = Release|Win32
+		{7F161D00-4F63-44B8-B4A8-B512F10A2263}.Release|Win32.Build.0 = Release|Win32
+		{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}.Debug|Win32.Build.0 = Debug|Win32
+		{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}.Release|Win32.ActiveCfg = Release|Win32
+		{DC2D1D9A-50F9-4A91-ACB6-0E1768B500A1}.Release|Win32.Build.0 = Release|Win32
+		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Debug|Win32.Build.0 = Debug|Win32
+		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Release|Win32.ActiveCfg = Release|Win32
+		{A87EFE59-8E62-4CA6-ABF5-10B1AB986C83}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

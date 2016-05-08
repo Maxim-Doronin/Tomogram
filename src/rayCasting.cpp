@@ -103,7 +103,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 	int h = height / 2;
 	int d = depth / 2;
 
-	while  ((curX <= -w) || (curX >= w - 1) ||
+	while  ((curX <= 0) || (curX >= w - 1) ||
 			(curY <= -d) || (curY >= d - 1) ||
 			(curZ <= -h) || (curZ >= h - 1))
 	{
@@ -218,9 +218,9 @@ void RayCasting::render(float phi, float psi)
 			dir.z = -sin(psi) - y * cos(psi);
 
 			dir.normalize();
-			dir.x /= 4;
-			dir.y /= 4;
-			dir.z /= 4;
+			dir.x /= 1;
+			dir.y /= 1;
+			dir.z /= 1;
 
 			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}
@@ -232,4 +232,5 @@ void RayCasting::render(float phi, float psi)
 //построить изоповерхность? добавить слайдер-порог изоповерхности
 //изоповерхности
 //оптимизированная формула для градиента
-//TODO: fix non-maximum supresiion
+//DONE TODO: fix non-maximum supresiion 
+//TODO: non-recursive implementation in tracing edges
