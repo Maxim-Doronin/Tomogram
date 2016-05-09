@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 	//первый аргумент -- количество слоев в прокрутке
 	//второй -- имя файла
 	
-	tomo w(6, "Resources/legs.bin");
+	tomo w(6, "../../../resources/head.bin");
 	w.show();
 
 	return a.exec();
