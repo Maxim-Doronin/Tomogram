@@ -7,9 +7,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	src = 0;
 	
 	tomoData = new TomoData(file);
-	tomoData->getData2D();
+	uchar *data = tomoData->getData2D();
 	//CannyOperator::sobel3D(tomoData);
-	tGL		 = new TomoOGL(tomoData->data2D, tomoData->dataSize.x, tomoData->dataSize.y);
+	tGL		 = new TomoOGL(data, tomoData->dataSize.x, tomoData->dataSize.y);
 	
 	hysto    = new Hystogram();
 	hysto->setLay(0);
@@ -20,9 +20,9 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats    = new Stats();
 	stats->setData(tomoData->data3D, tomoData->dataSize.x, tomoData->dataSize.y, tomoData->dataSize.z);
 	stats->setLay(0);
-	rayCastingBox = new QCheckBox("Ray Casting");
+	rayCastingBox = new QCheckBox("3D visualization");
 	rayCastingBox->setChecked(false);
-	phi = 45;
+	phi = 60;
 	psi = 0;
 
 	posPressed    = new QLabel(this);
@@ -77,14 +77,17 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	sliderLeft = new QSlider(Qt::Horizontal);
 	sliderLeft->setRange(minR, maxR);
 	sliderLeft->setValue(2300);
+	sliderLeft->setMaximumHeight(20);
 	
 	sliderMid = new QSlider(Qt::Horizontal);
 	sliderMid->setRange(minR, maxR);
 	sliderMid->setValue(3150);
+	sliderMid->setMaximumHeight(20);
 
 	sliderRight = new QSlider(Qt::Horizontal);
 	sliderRight->setRange(minR, maxR);
 	sliderRight->setValue(4000);
+	sliderRight->setMaximumHeight(20);
 
 	layout = new QHBoxLayout;
 	layout->addWidget(lineLow);
@@ -186,7 +189,7 @@ void tomo::lineLowChange(QString str)
 {
 	int _lowIdx = str.toInt();
 	tomoData->setLowIdx(_lowIdx);
-	if (tomoData->lowIdx >= tomoData->hiIdx)
+	if (tomoData->getLowIdx() >= tomoData->getHiIdx())
 		go->setEnabled(false);
 	else
 		go->setEnabled(true);
@@ -196,7 +199,7 @@ void tomo::lineHiChange(QString str)
 {
 	int _hiIdx = str.toInt();
 	tomoData->setHiIdx(_hiIdx);
-	if (tomoData->lowIdx >= tomoData->hiIdx)
+	if (tomoData->getLowIdx() >= tomoData->getHiIdx())
 		go->setEnabled(false);
 	else
 		go->setEnabled(true);
@@ -204,8 +207,8 @@ void tomo::lineHiChange(QString str)
 
 void tomo::goClicked()
 {
-	sliderRight->setValue(tomoData->hiIdx);
-	sliderLeft->setValue(tomoData->lowIdx);
+	sliderRight->setValue(tomoData->getHiIdx());
+	sliderLeft->setValue(tomoData->getLowIdx());
 }
 
 void tomo::setRangeLeft(int _lowIdx)
@@ -292,7 +295,7 @@ void tomo::setMouseReleasePosition(int x, int y)
 	str = xStr + ' ' + yStr;
 	
 	stats->setArea(x, y, pointPressed.x(), pointPressed.y());
-	stats->setLay(tomoData->lay);
+	stats->setLay(tomoData->getLay());
 
 	averVal.setNum(stats->averageDensity());
 	averVal = "Average density: " + averVal;
@@ -480,7 +483,7 @@ void tomo::dumpEvent(QWheelEvent *we)
 
 	if (rayCastingBox->isChecked())
 	{
-		rc = new RayCasting(tomoData, tomoData->lowIdx, tomoData->hiIdx);
+		rc = new RayCasting(tomoData, tomoData->getLowIdx(), tomoData->getHiIdx());
 		rc->render(phi, psi);
 		tGL->upd(tomoData->dataColor2D, w, h);
 		delete rc;
