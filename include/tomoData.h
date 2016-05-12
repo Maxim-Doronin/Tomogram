@@ -38,6 +38,7 @@ public:
 	uchar* data2D;			//отображаемые оттенки серого
 	RGBA*  dataColor2D;		//отображемое цветная картинка
 
+private:
 	int lay;
 	int lowIdx;
 	int hiIdx;

@@ -120,6 +120,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 			(color.alpha < 1 ))
 	{
 		ushort voxel = interpolation(w-curX, d+curY, h+curZ);
+		
 		if (voxel >= option->minRange || voxel < option->maxRange)
 		{
 			Vec3f grad = calculateGradient(w-curX, d+curY, h+curZ); 
@@ -172,7 +173,7 @@ Vec3f RayCasting::calculateGradient(float x, float y, float z)
 	float z1 = z - 0.4 / data->scale.z;
 	float z2 = z + 0.4 / data->scale.z;
 	Vec3f result;
-	result.x = interpolation(x2, y, z) - interpolation(x1, y, z);
+	result.x = -interpolation(x2, y, z) + interpolation(x1, y, z);
 	result.y = interpolation(x, y2, z) - interpolation(x, y1, z);
 	result.z = interpolation(x, y, z2) - interpolation(x, y, z1);
 	result.normalize();
@@ -218,9 +219,9 @@ void RayCasting::render(float phi, float psi)
 			dir.z = -sin(psi) - y * cos(psi);
 
 			dir.normalize();
-			dir.x /= 2;
-			dir.y /= 2;
-			dir.z /= 2;
+			dir.x /= 10;
+			dir.y /= 10;
+			dir.z /= 10;
 
 			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}
