@@ -22,7 +22,7 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	stats->setLay(0);
 	rayCastingBox = new QCheckBox("3D visualization");
 	rayCastingBox->setChecked(false);
-	phi = 60;
+	phi = 0;
 	psi = 0;
 
 	posPressed    = new QLabel(this);
@@ -176,8 +176,8 @@ void tomo::wheelEvent(QWheelEvent *we)
 void tomo::keyPressEvent(QKeyEvent *pe)
 {
 	switch (pe->key()) {
-	case Qt::Key_D : { phi += 10; break; }
-	case Qt::Key_A : { phi -= 10; break; }
+	case Qt::Key_D : { phi += 20; break; }
+	case Qt::Key_A : { phi -= 20; break; }
 	case Qt::Key_W : { psi += 10; break; }
 	case Qt::Key_S : { psi -= 10; break; }
 	default: return; }

@@ -103,7 +103,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 	int h = height / 2;
 	int d = depth / 2;
 
-	while  ((curX <= -w) || (curX >= w - 1) ||
+	while  ((curX <= -w+70) || (curX >= w - 1-70) ||
 			(curY <= -d) || (curY >= d - 1) ||
 			(curZ <= -h) || (curZ >= h - 1))
 	{
@@ -114,7 +114,7 @@ RGBA& RayCasting::ray(Vec3f origin, Vec3f dir, RGBA& color, Options* option, int
 			break;
 	}
 
-	while  ((curX > -w) && (curX < w - 1) &&
+	while  ((curX > -w+70) && (curX < w - 1-70) &&
 			(curY > -d) && (curY < d - 1) &&
 			(curZ > -h) && (curZ < h - 1) &&
 			(color.alpha < 1 ))
@@ -186,6 +186,13 @@ void RayCasting::calculateOrigin(Vec3f &origin, float phi, float psi)
 	origin.x = r * sin(phi) * cos(psi);
 	origin.y = -r * cos(phi) * cos(psi); 
 	origin.z = r * sin(psi);
+	Vec3f normal;
+	normal.x = 1;
+	normal.y = -origin.x/origin.y;
+	normal.z = 0;
+	normal.normalize();
+	origin.x -= normal.x;
+	origin.y -= normal.y;
 }
 
 void RayCasting::render(float phi, float psi)
@@ -219,9 +226,9 @@ void RayCasting::render(float phi, float psi)
 			dir.z = -sin(psi) - y * cos(psi);
 
 			dir.normalize();
-			dir.x /= 10;
-			dir.y /= 10;
-			dir.z /= 10;
+			dir.x /= 4;
+			dir.y /= 4;
+			dir.z /= 4;
 
 			data->dataColor2D[j * depth + i] = ray(origin, dir, color, option, i, j);
 		}

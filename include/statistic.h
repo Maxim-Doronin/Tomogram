@@ -1,6 +1,7 @@
 #pragma once
 #include "TomoData.h"
 #include <cstdlib>
+#include <algorithm>
 
 class Stats{
 public:
