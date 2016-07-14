@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
-#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
-//#include "GL/glew.h"
+#ifdef _DEBUG
+	#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
+#else
+	#include "GL/glew.h"
+#endif
 #include "glm/glm.hpp"
-using std::string;
 
 class GLShader {
 public:

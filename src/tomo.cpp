@@ -5,12 +5,13 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 {
 	this->_lay = _lay;
 	src = 0;
-	
+	dist = 1.5f;
+
 	tomoData = new TomoData(file);
 	uchar *data = tomoData->getData2D();
 	//CannyOperator::sobel3D(tomoData);
-	tGL		 = new TomoOGL(data, tomoData->dataSize.x, tomoData->dataSize.y);
-	
+	//tGL		 = new TomoOGL(data, tomoData->dataSize.x, tomoData->dataSize.y);
+	dSh = new DrawShader(tomoData, tomoData->dataSize.x, tomoData->dataSize.y);
 	hysto    = new Hystogram();
 	hysto->setLay(0);
 	hysto->setLowIdx(2300);
@@ -117,7 +118,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 
 	image = new QHBoxLayout;
 	image->addLayout(statistic);
-	image->addWidget(tGL);
+	//image->addWidget(tGL);
+	image->addWidget(dSh);
 
 	sliders = new QVBoxLayout;
 	sliders->addWidget(sliderLeft);
@@ -142,8 +144,8 @@ tomo::tomo(int _lay, char* file, QWidget *parent)
 	connect(sliderLeft, SIGNAL(valueChanged(int)), this, SLOT(setRangeLeft(int)));
 	connect(sliderMid, SIGNAL(valueChanged(int)), this, SLOT(setRangeMid(int)));
 	connect(sliderRight, SIGNAL(valueChanged(int)), this, SLOT(setRangeRight(int)));
-	connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
-	connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
+	//connect(tGL, SIGNAL(mousePressed(int, int)), this, SLOT(setMousePressPosition(int, int)));
+	//connect(tGL, SIGNAL(mouseReleased(int, int)), this, SLOT(setMouseReleasePosition(int, int)));
 	connect(gaussCheckBox, SIGNAL(stateChanged(int)), this, SLOT(gaussCheckChanged(int)));
 	connect(gaussLineEdit, SIGNAL(textChanged(QString)), this, SLOT(gaussLineChanged(QString)));
 	connect(sobelCheckBox, SIGNAL(stateChanged(int)), this, SLOT(sobelCheckChanged(int)));
@@ -170,16 +172,21 @@ tomo::~tomo()
 
 void tomo::wheelEvent(QWheelEvent *we)
 {
+	if (we->delta() > 0)
+		dist *= 0.8f;
+	else
+		dist *= 1.2f;
+
 	dumpEvent(we);
 }
 
 void tomo::keyPressEvent(QKeyEvent *pe)
 {
 	switch (pe->key()) {
-	case Qt::Key_D : { phi += 20; break; }
-	case Qt::Key_A : { phi -= 20; break; }
-	case Qt::Key_W : { psi += 10; break; }
-	case Qt::Key_S : { psi -= 10; break; }
+	case Qt::Key_D : { phi += 5; break; }
+	case Qt::Key_A : { phi -= 5; break; }
+	case Qt::Key_W : { psi += 5; break; }
+	case Qt::Key_S : { psi -= 5; break; }
 	default: return; }
 
 	dumpEvent();
@@ -486,11 +493,13 @@ void tomo::dumpEvent(QWheelEvent *we)
 		rc = new RayCasting(tomoData, tomoData->getLowIdx(), tomoData->getHiIdx());
 		//rc->render(phi, psi);
 		rc->renderWithShader(phi, psi);
-		tGL->upd(tomoData->dataColor2D, w, h);
+		//tGL->upd(tomoData->dataColor2D, w, h);
 		delete rc;
 	}
 	else
-		tGL->upd(src, w, h);
+		//tGL->upd(src, w, h);
+		dSh->upd(phi, psi, dist);
+		
 	
 	this->update();
 

@@ -1,10 +1,8 @@
 #pragma once
 
 #include "camera.h"
-
 #include "textureWorker.h"
 #include "GLShaders.h"
-class GLShader;
 
 class ShaderWorker {
 public:
@@ -12,25 +10,25 @@ public:
 	~ShaderWorker();
 	void ReloadShader();
 	void ApplyCamera(Camera* c);
-	void UploadFieldData(void* data, ivec3 size, int type, vec3 scale);
+	void UploadFieldData(void* data, glm::ivec3 size, int type, glm::vec3 scale);
 	void SetLevel(float level);
-	void SetBoundingBox(vec3 a, vec3 b);
+	void SetBoundingBox(glm::vec3 a, glm::vec3 b);
 
 	void Draw(Camera* c);
 	
 	//	void UpdateUniforms();
 	
 	float GetMinLevel();
-	vec3 GetMinBox();
-	vec3 GetMaxBox();
+	glm::vec3 GetMinBox();
+	glm::vec3 GetMaxBox();
 
 	//void SetAnag(int s, bool left);
 
 	bool draw_frame_is;
-	ivec3 size;
+	glm::ivec3 size;
 private:
 
-	vec3 anag[3];
+	glm::vec3 anag[3];
 	
 	GLShader *shader;
 
@@ -39,6 +37,6 @@ private:
 	//TextureWorker* st_n;
 
 	float level;
-	vec3 box1, box2;
-	vec3 scale;
+	glm::vec3 box1, box2;
+	glm::vec3 scale;
 };

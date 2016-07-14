@@ -28,7 +28,7 @@ TextureWorker::TextureWorker(int width, int height, int depth,
 		}
 		else
 		{
-			internal_format = GL_LUMINANCE16F_ARB;
+			internal_format = GL_LUMINANCE16;
 			texture_format = GL_LUMINANCE;
 		}
 

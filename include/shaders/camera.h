@@ -1,20 +1,23 @@
 #pragma once
 
-#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
-//#include "GL/glew.h"
+#ifdef _DEBUG
+	#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
+#else
+	#include "GL/glew.h"
+#endif
 #include "glm/glm.hpp"
-using namespace glm;
+
 #define PI180 57.295779f
 
 class Camera {
 private:
-	vec3 position;
-	vec3 navigation;
-	vec3 top;
-	vec3 left;
-	vec3 center;
+	glm::vec3 position;
+	glm::vec3 direction;
+	glm::vec3 top;
+	glm::vec3 left;
+	glm::vec3 center;
 	float xRotation, yRotation;
-	float distantion;
+	float distance;
 
 	void updateVecs();
 
@@ -24,15 +27,15 @@ public:
 	void SetupPosition();
 	void SetupProjection(float angle, float mynear, float myfar, int x, int y, int width, int height);
 
-	void SetCenter(vec3 center);
+	void SetCenter(glm::vec3 center);
 	void SetDistance(float distantion);
 	float GetDistance() const;
 
-	vec3 GetCenter();
-	vec3 GetPosition();
-	vec3 GetNav();
-	vec3 GetLeft();
-	vec3 GetTop();
+	glm::vec3 GetCenter();
+	glm::vec3 GetPosition();
+	glm::vec3 GetNav();
+	glm::vec3 GetLeft();
+	glm::vec3 GetTop();
 
 	void SetXRot(float xRotation);
 	void SetYRot(float yRotation);

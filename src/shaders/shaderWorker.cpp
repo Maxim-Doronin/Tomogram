@@ -1,16 +1,24 @@
 #include "shaders\shaderWorker.h"
-
-//#include "AllDef.h"
-//#include "Draw.h"
 #include <windows.h>
-//#include "vec.h"
-//#include "str.h"
+using namespace glm;
 
 extern int stereo_on;
+void DrawCube(vec3 a, vec3 b);
+
+void DrawCubeFrame(vec3 a, vec3 b)
+{
+
+	glBegin(GL_LINE_LOOP);		glVertex3f(a.x, a.y, b.z);		glVertex3f(b.x, a.y, b.z);			glVertex3f(b.x, b.y, b.z);		glVertex3f(a.x, b.y, b.z);		glEnd();
+	glBegin(GL_LINE_LOOP);		glVertex3f(a.x, a.y, a.z);		glVertex3f(a.x, b.y, a.z);			glVertex3f(b.x, b.y, a.z);			glVertex3f(b.x, a.y, a.z);		glEnd();
+	glBegin(GL_LINE_LOOP);		glVertex3f(a.x, b.y, a.z);		glVertex3f(a.x, b.y, b.z);		glVertex3f(b.x, b.y, b.z);		glVertex3f(b.x, b.y, a.z);		glEnd();
+	glBegin(GL_LINE_LOOP);		glVertex3f(a.x, a.y, a.z);		glVertex3f(b.x, a.y, a.z);		glVertex3f(b.x, a.y, b.z);		glVertex3f(a.x, a.y, b.z);		glEnd();
+	glBegin(GL_LINE_LOOP);		glVertex3f(b.x, a.y, a.z);		glVertex3f(b.x, b.y, a.z);			glVertex3f(b.x, b.y, b.z);		glVertex3f(b.x, a.y, b.z);		glEnd();
+	glBegin(GL_LINE_LOOP);		glVertex3f(a.x, a.y, a.z);	    	glVertex3f(a.x, a.y, b.z);			glVertex3f(a.x, b.y, b.z);			glVertex3f(a.x, b.y, a.z);		glEnd();
+
+}
 
 ShaderWorker::ShaderWorker() :level(0), box1(0), box2(1),
-		st(0), //st_i(0), st_n(0), 
-		shader()
+		st(0), shader()
 {
 	draw_frame_is = 1;
 	ReloadShader();
@@ -20,8 +28,6 @@ ShaderWorker::~ShaderWorker()
 {
 	delete shader;
 	if (st) delete st;
-	//if (st_i) delete st_i;
-	//if (st_n) delete st_n;
 }
 
 void ShaderWorker::ReloadShader()
@@ -84,16 +90,14 @@ void ShaderWorker::SetBoundingBox(vec3 a, vec3 b)
 void ShaderWorker::Draw(Camera* camera)
 {
 	vec3 bb1 = box1, bb2 = box2;
-	/*
-	//вывод рамки
-	if (stereo_on != 1 && draw_frame_is)
-	{
-		glColor3f(0.5f, 0.5f, 0.5f);
-		glDisable(GL_LIGHTING);
-		DrawCubeFrame(bb1, bb2);
-		glEnable(GL_LIGHTING);
-	} */
 
+	//вывод рамки
+	
+	glColor3f(0.5f, 0.5f, 0.5f);
+	glDisable(GL_LIGHTING);
+	DrawCubeFrame(bb1, bb2);
+	glEnable(GL_LIGHTING);
+	
 	shader->use();
 	if (st)
 		shader->setUniform("f_text", st->GetTexture());
@@ -101,8 +105,24 @@ void ShaderWorker::Draw(Camera* camera)
 	shader->setUniform("box2", box2);
 	shader->setUniform("scale", scale);
 	shader->setUniform("size", vec3(size.x, size.y, size.z));
-	//DrawCube(bb1, bb2); //вывод коробки (т.е. наших объёмных данных, т.к. для закрашивания коробки используется шейдер трассировки луча)
+
+	DrawCube(bb1, bb2); //вывод коробки (т.е. наших объёмных данных, т.к. для закрашивания коробки используется шейдер трассировки луча)
+	
 	shader->release();
+}
+
+void DrawCube(vec3 a, vec3 b)
+{
+
+	glBegin(GL_QUADS);
+	glNormal3d(0.0, 0.0, 1.0);		glVertex3f(a.x, a.y, b.z);		glVertex3f(b.x, a.y, b.z);			glVertex3f(b.x, b.y, b.z);		glVertex3f(a.x, b.y, b.z);
+	glNormal3d(0.0, 0.0, -1.0);		glVertex3f(a.x, a.y, a.z);		glVertex3f(a.x, b.y, a.z);			glVertex3f(b.x, b.y, a.z);			glVertex3f(b.x, a.y, a.z);
+	glNormal3d(0.0, 1.0, 0.0);		glVertex3f(a.x, b.y, a.z);		glVertex3f(a.x, b.y, b.z);		glVertex3f(b.x, b.y, b.z);		glVertex3f(b.x, b.y, a.z);
+	glNormal3d(0.0, -1.0, 0.0);		glVertex3f(a.x, a.y, a.z);		glVertex3f(b.x, a.y, a.z);		glVertex3f(b.x, a.y, b.z);		glVertex3f(a.x, a.y, b.z);
+	glNormal3d(1.0, 0.0, 0.0);		glVertex3f(b.x, a.y, a.z);		glVertex3f(b.x, b.y, a.z);			glVertex3f(b.x, b.y, b.z);		glVertex3f(b.x, a.y, b.z);
+	glNormal3d(-1.0, 0.0, 0.0);		glVertex3f(a.x, a.y, a.z);	    	glVertex3f(a.x, a.y, b.z);			glVertex3f(a.x, b.y, b.z);			glVertex3f(a.x, b.y, a.z);
+	glEnd();
+
 }
 
 float ShaderWorker::GetMinLevel() 

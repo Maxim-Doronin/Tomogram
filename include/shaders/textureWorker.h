@@ -1,17 +1,11 @@
 #pragma once
 
-#include <vector>
-#include <assert.h>
-
-#include <cstdlib>
-#include <cstdio>
-#include <iostream>
-#include <cmath>
-#include <cstring>
-#include <fstream>
-#include <ctime>
-
-#include "GLShaders.h"
+#ifdef _DEBUG
+#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
+#else
+#include "GL/glew.h"
+#endif
+#include "glm/glm.hpp"
 
 class TextureWorker {
 public:

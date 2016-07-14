@@ -8,6 +8,13 @@ using std::ofstream;
 GLShader::GLShader() : ShaderProgram(0), vertex_shader(0), fragment_shader(0)
 {
 	remove("log.txt");
+	GLenum err = glewInit();
+	if (err != GLEW_OK)
+	{
+		ofstream output("log.txt", std::ios::app);
+		output << "Can't init glew\n";
+		output.close();
+	}
 }
 
 GLShader::~GLShader()
@@ -20,7 +27,7 @@ GLShader::~GLShader()
 	glDeleteProgram(ShaderProgram);
 }
 
-GLuint GLShader::loadFiles(const string& vertex_file_name, const string& fragment_file_name)
+GLuint GLShader::loadFiles(const std::string& vertex_file_name, const std::string& fragment_file_name)
 {
 	const GLchar* vShader;
 	const GLchar* fShader;
@@ -50,7 +57,7 @@ GLuint GLShader::loadFiles(const string& vertex_file_name, const string& fragmen
 	return ShaderProgram;
 }
 
-GLuint GLShader::load(const string& vertex_source, const string& fragment_source)
+GLuint GLShader::load(const std::string& vertex_source, const std::string& fragment_source)
 {
 	vertex_shader = compileSource(vertex_source.c_str(), GL_VERTEX_SHADER);
 	fragment_shader = compileSource(fragment_source.c_str(), GL_FRAGMENT_SHADER);
@@ -311,7 +318,7 @@ GLuint GLShader::compileSource(const GLchar* source, GLuint shader_type)
 	return shader;
 }
 
-const GLchar* GLShader::loadSourcefile(const string& source_file_name)
+const GLchar* GLShader::loadSourcefile(const std::string& source_file_name)
 {
 	ifstream  file;
 	file.open(source_file_name.c_str());

@@ -13,6 +13,7 @@
 #include "shaders\GLShaders.h"
 #include "TomoData.h"
 #include "tomoOGL.h"
+#include "drawShader.h"
 #include "hystogram.h"
 #include "statistic.h"
 #include "gaussBlur.h"
@@ -35,11 +36,13 @@ protected:
 	
 	TomoData *tomoData;
 	TomoOGL *tGL;
+	DrawShader *dSh;
 	uchar *src;				//информация, отображаемая на экране
 	Hystogram *hysto;
 	Stats *stats;
 	RayCasting *rc;
 	float phi, psi;
+	float dist;
 
 	QHBoxLayout *layout;
 	QHBoxLayout *tresholds;

@@ -273,7 +273,7 @@ void RayCasting::renderWithShader(float phi, float psi)
 	//shader->size.z = data->dataSize.z;
 	shader->size = size;
 	shader->UploadFieldData(data->data3D, size, type, scale);
-	shader->SetBoundingBox(vec3(0), scale);
+	shader->SetBoundingBox(vec3(-100), vec3(-100));
 
 	shader->SetLevel(0.008f);
 	camera.SetCenter(vec3(0.5f));

@@ -1,4 +1,6 @@
 #version 130
+//Вершина (vertex) и Нормаль, аппаратно интерполируемые внутри окна (Near), объявленного в OpenGL. 			
+//От вершины стартует луч, а нормаль здесь используется для областей, где Near сечет изоповерхность
 varying vec3 vertex, normal;
 
 
@@ -153,6 +155,6 @@ void main()
     mat3 m_anag = mat3(RFrom,GFrom,BFrom);    // создаём матрицу для анаглифа
 
     // окончательно определяем цвет пикселя с учетом анаглифа и непрозрачности
-    gl_FragColor = vec4( color * m_anag ,1.0-op);
-//gl_FragColor = vec4( color ,1.0-op);
+    //gl_FragColor = vec4( color * m_anag ,1.0-op);
+	gl_FragColor = vec4( color ,1.0-op);
 }

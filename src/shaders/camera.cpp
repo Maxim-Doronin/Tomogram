@@ -1,18 +1,24 @@
 #include "shaders/camera.h"
 
-#include <Math.h>
+#include <cmath>
+using namespace glm;
 
 
-
-Camera::Camera() : distantion(3), center(0)
+Camera::Camera() 
 {
+	distance = 0;
+	center = vec3(0);
+	top = vec3(0, 0, 1);
+	left = vec3(-1, 0, 0);
+	xRotation = 0;
+	yRotation = 0;
 	updateVecs();
 }
 
 void Camera::SetupPosition()
 {
 	glLoadIdentity();
-	glTranslated(0.0, 0.0, -distantion);
+	glTranslated(0.0, 0.0, -distance);
 	glRotated(-xRotation * PI180, 1.0, 0.0, 0.0);
 	glRotated(-yRotation * PI180 + 180, 0.0, 1.0, 0.0);
 	glTranslated(-center.x, -center.y, -center.z);
@@ -34,12 +40,12 @@ void Camera::SetCenter(vec3 center)
 }
 void Camera::SetDistance(float distantion)
 {
-	this->distantion = distantion;
+	this->distance = distantion;
 	updateVecs();
 }
 float Camera::GetDistance() const
 {
-	return distantion;
+	return distance;
 }
 
 vec3 Camera::GetCenter() 
@@ -52,7 +58,7 @@ vec3 Camera::GetPosition()
 }
 vec3 Camera::GetNav() 
 { 
-	return navigation;
+	return direction;
 }
 vec3 Camera::GetLeft() 
 { 
@@ -98,13 +104,19 @@ void Camera::updateVecs()
 	float cosx = cos(xRotation);
 	float siny = sin(yRotation);
 	float cosy = cos(yRotation);
+/*
+	direction = vec3(sinx * cosy, cosx * cosy, siny);
+	position = direction * (-distance);
+	position += center;
+	*/
 	
-	navigation = vec3(siny * cosx, sinx, cosy * cosx);
+	direction = vec3(siny * cosx, sinx, cosy * cosx);
 	top = vec3(-siny * sinx, cosx, -cosy * sinx);
 	left = vec3(-cosy, 0, siny);
 	
-	position = navigation * (-distantion);
+	position = direction * (-distance);
 	position += center;
+	
 }
 
 
