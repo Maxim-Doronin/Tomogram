@@ -242,3 +242,47 @@ void RayCasting::render(float phi, float psi)
 //оптимизированная формула для градиента
 //DONE TODO: fix non-maximum supresiion 
 //TODO: non-recursive implementation in tracing edges
+
+#include "shaders\GLShaders.h"
+#include "shaders\camera.h"
+#include "shaders\shaderWorker.h"
+using namespace glm;
+void RayCasting::renderWithShader(float phi, float psi)
+{
+	glewInit();
+	Camera camera;
+	ShaderWorker *shader = new ShaderWorker();
+		
+	glewExperimental = GL_TRUE;
+	glClearColor(0, 0, 0, 0);
+	glEnable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	int type = GL_SHORT;
+	vec3 scale = glm::vec3(1, data->dataSize.y / float(data->dataSize.x), data->dataSize.z / float(data->dataSize.x));
+	ivec3 size(data->dataSize.x, data->dataSize.y, data->dataSize.z);
+	//shader->size.x = data->dataSize.x;
+	//shader->size.y = data->dataSize.y;
+	//shader->size.z = data->dataSize.z;
+	shader->size = size;
+	shader->UploadFieldData(data->data3D, size, type, scale);
+	shader->SetBoundingBox(vec3(0), scale);
+
+	shader->SetLevel(0.008f);
+	camera.SetCenter(vec3(0.5f));
+	camera.SetDistance(1.5f);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	camera.SetupPosition();
+	shader->ApplyCamera(&camera);
+	shader->Draw(&camera);
+
+	delete shader;
+}

@@ -10,6 +10,7 @@
 #include <QCheckBox>
 #include <QString>
 #include <QKeyEvent>
+#include "shaders\GLShaders.h"
 #include "TomoData.h"
 #include "tomoOGL.h"
 #include "hystogram.h"

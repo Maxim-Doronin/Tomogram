@@ -9,9 +9,18 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{116bddef-211b-42de-8933-c05ba39dfeb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="..\..\..\shaders\raycasting.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\..\..\shaders\raycasting.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\rayCasting.h">

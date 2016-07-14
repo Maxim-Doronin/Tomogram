@@ -3,15 +3,18 @@
 #include <iostream>
 
 using std::ifstream;
+using std::ofstream;
 
-GLShader::GLShader() : ShaderProgram(0)
+GLShader::GLShader() : ShaderProgram(0), vertex_shader(0), fragment_shader(0)
 {
-
+	remove("log.txt");
 }
 
 GLShader::~GLShader()
 {
 	glUseProgram(0);
+	glDetachShader(ShaderProgram, vertex_shader);
+	glDetachShader(ShaderProgram, fragment_shader);
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
 	glDeleteProgram(ShaderProgram);
@@ -19,11 +22,31 @@ GLShader::~GLShader()
 
 GLuint GLShader::loadFiles(const string& vertex_file_name, const string& fragment_file_name)
 {
-	vertex_shader = loadSourcefile(vertex_file_name, GL_VERTEX_SHADER);
-	fragment_shader = loadSourcefile(fragment_file_name, GL_FRAGMENT_SHADER);
+	const GLchar* vShader;
+	const GLchar* fShader;
+	vShader = loadSourcefile(vertex_file_name);
+	fShader = loadSourcefile(fragment_file_name);
+	
+	versionControl();
+
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(vertex_shader, 1, &vShader, NULL);
+	glShaderSource(fragment_shader, 1, &fShader, NULL);
+
+	glCompileShader(vertex_shader);
+	glCompileShader(fragment_shader);
+
+#ifdef _DEBUG
+	printInfoLogShader(vertex_shader, GL_VERTEX_SHADER);
+	printInfoLogShader(fragment_shader, GL_FRAGMENT_SHADER);
+#endif
 
 	linkProgram();
 
+	delete []vShader;
+	delete []fShader;
 	return ShaderProgram;
 }
 
@@ -61,13 +84,21 @@ void GLShader::linkProgram()
 	glLinkProgram(ShaderProgram);
 	glGetProgramiv(ShaderProgram, GL_LINK_STATUS, &link_ok);
 	if (!link_ok) {
-		std::cout << "glLinkProgram:";
+		ofstream output("log.txt", std::ios::app);
+		output << "glLinkProgram: ";
+		output.close();
 #ifdef _DEBUG
 		printInfoLogProgram(ShaderProgram);
 #endif
 		ShaderProgram = GL_FALSE;
 		return;
 	}
+	else {
+		ofstream output("log.txt", std::ios::app);
+		output << "Successfully linked!\n\n";
+		output.close();
+	}
+	
 }
 
 void GLShader::use()
@@ -97,8 +128,11 @@ GLint GLShader::getAttribLocation(const GLchar* name) const
 {
 	GLint location = -1;
 	location = glGetAttribLocation(ShaderProgram, name);
-	if (location == -1)
-		std::cout << "Could not bind attribute " << name << "\n";
+	if (location == -1) {
+		ofstream output("log.txt", std::ios::app);
+		output << "Could not bind attribute " << name << "\n";
+		output.close();
+	}
 	return location;
 }
 
@@ -112,8 +146,11 @@ GLint GLShader::getUniformLocation(const GLchar* name) const
 {
 	GLint location = -1;
 	location = glGetUniformLocation(ShaderProgram, name);
-	if (location == -1)
-		std::cout << "Could not bind uniform " << name << "\n";
+	if (location == -1) {
+		ofstream output("log.txt", std::ios::app);
+		output << "Could not bind uniform " << name << "\n";
+		output.close();
+	}
 	return location;
 }
 
@@ -150,18 +187,58 @@ void GLShader::setUniform(GLint location, const GLint value)
 {
 	glUniform1i(location, value);
 }
+void GLShader::setUniform(GLint location, const GLuint value)
+{
+	glUniform1i(location, value);
+}
+void GLShader::setUniform(const std::string& name, const glm::vec4& value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const glm::vec3& value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const glm::vec2& value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const glm::mat4& value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const GLint value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const GLuint value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+void GLShader::setUniform(const std::string& name, const GLfloat value)
+{
+	GLint location = getUniformLocation(name);
+	setUniform(location, value);
+}
+
 //---------------------------------------------------
 
 //! Print info log
-void GLShader::printInfoLogShader(GLuint shader)
+void GLShader::printInfoLogShader(GLuint shader, GLuint shader_type)
 {
 	int infologLen = 0;
 	int charsWritten = 0;
 
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infologLen);
-
+	ofstream output("log.txt", std::ios::app);
 	if (infologLen > 1)
-	{
+	{	
 		GLchar *infoLog = new GLchar[infologLen];
 		if (infoLog == NULL)
 		{
@@ -169,10 +246,18 @@ void GLShader::printInfoLogShader(GLuint shader)
 			exit(1);
 		}
 		glGetShaderInfoLog(shader, infologLen, &charsWritten, infoLog);
-
-		std::cout << "InfoLog: " << infoLog << "\n\n\n";
+		if (shader_type == GL_VERTEX_SHADER) 
+			output << "InfoLog vertex shader : "<< infoLog << "\n\n\n";
+		else
+			output << "InfoLog fragment shader : " << infoLog << "\n\n\n";
 		delete[] infoLog;
 	}
+	else 
+		if (shader_type == GL_VERTEX_SHADER)
+			output << "Vertex shader is compiled" << "\n\n\n";
+		else
+			output << "Fragment shader is compiled"  << "\n\n\n";
+	output.close();
 }
 
 //! Print info log
@@ -185,6 +270,7 @@ void GLShader::printInfoLogProgram(GLuint shader)
 
 	if (infologLen > 1)
 	{
+		ofstream output("log.txt", std::ios::app);
 		GLchar *infoLog = new GLchar[infologLen];
 		if (infoLog == NULL)
 		{
@@ -193,9 +279,24 @@ void GLShader::printInfoLogProgram(GLuint shader)
 		}
 		glGetProgramInfoLog(shader, infologLen, &charsWritten, infoLog);
 
-		std::cout << "InfoLog: " << infoLog << "\n\n\n";
+		output << "InfoLog: " << infoLog << "\n\n\n";
 		delete[]infoLog;
+		output.close();
 	}
+}
+
+void GLShader::versionControl() {
+	ofstream output("log.txt", std::ios::app);
+	float version = (float)atof((const char *)glGetString(GL_VERSION));
+	output << "OpenGL v" << version;
+	if (version < 2) {
+		output << " <-- ERROR: Need at least OpenGL v2.0. Does your graphics card support shaders?\n";
+		exit(-1);
+	}
+	else {
+		output << " <-- OKAY!\n\n\n";
+	}
+	output.close();
 }
 
 GLuint GLShader::compileSource(const GLchar* source, GLuint shader_type)
@@ -205,22 +306,35 @@ GLuint GLShader::compileSource(const GLchar* source, GLuint shader_type)
 	glCompileShader(shader);
 
 #ifdef _DEBUG
-	printInfoLogShader(shader);
+	printInfoLogShader(shader, shader_type);
 #endif
 	return shader;
 }
 
-GLuint GLShader::loadSourcefile(const string& source_file_name, GLuint shader_type)
+const GLchar* GLShader::loadSourcefile(const string& source_file_name)
 {
-	ifstream  file(source_file_name.c_str());
-	if (!file)
-	{
-		std::cout << source_file_name << "  file  not  found\n";
-		return  GL_FALSE;
+	ifstream  file;
+	file.open(source_file_name.c_str());
+	if (!file.is_open()) {
+		ofstream output("log.txt", std::ios::app);
+		output << "Shader File Error" << std::endl;
+		output.close();
+		return 0;
 	}
+	long begin = file.tellg();
+	file.seekg(0, std::ios::end);
+	long end = file.tellg();
+	int size = end - begin;
+	
+	char* tmp = new char[size + 1];
+	file.seekg(0, std::ios::beg);
 
-	std::istreambuf_iterator<char>  begin(file), end;
-	string  sourceStr(begin, end);
+	int i = 0;
+	while (file.good()) {
+		tmp[i] = file.get();
+		if (!file.eof()) i++;
+	}
+	tmp[i] = '\0';
 	file.close();
-	return  compileSource(sourceStr.c_str(), shader_type);
+	return (const GLchar*)tmp;
 }

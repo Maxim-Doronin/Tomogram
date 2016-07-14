@@ -1,10 +1,6 @@
 #include "tomo.h"
-#include "tomoOGL.h"
-#include "hystogram.h"
 #include <QtGui/QApplication>
-#include <TomoData.h>
 #include <QLabel>
-#define GLEW_STATIC
 
 int main(int argc, char *argv[])
 {

@@ -4,7 +4,6 @@
 #include <omp.h>
 #include <vector>
 #include <algorithm>
-
 #define pi 3.14159265358979323846
 
 class Vec3f {
@@ -51,4 +50,5 @@ public:
 	RayCasting(TomoData *data, int minRange, int maxRange);
 	~RayCasting();
 	void render(float phi, float psi);
+	void renderWithShader(float phi, float psi);
 };

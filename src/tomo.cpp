@@ -484,7 +484,8 @@ void tomo::dumpEvent(QWheelEvent *we)
 	if (rayCastingBox->isChecked())
 	{
 		rc = new RayCasting(tomoData, tomoData->getLowIdx(), tomoData->getHiIdx());
-		rc->render(phi, psi);
+		//rc->render(phi, psi);
+		rc->renderWithShader(phi, psi);
 		tGL->upd(tomoData->dataColor2D, w, h);
 		delete rc;
 	}

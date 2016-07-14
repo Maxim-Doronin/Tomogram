@@ -1,13 +1,9 @@
 #pragma once
 
 #include <string>
-#include "GL/glew.h"
-//#include "vec2.h"
-//#include "vec3.h"
-//#include "vec4.h"
+#include "C:\Users\asus\Tomogram\glew\include\GL\glew.h"
+//#include "GL/glew.h"
 #include "glm/glm.hpp"
-
-#define _DEBUG
 using std::string;
 
 class GLShader {
@@ -38,12 +34,24 @@ public:
 
 	void setUniform(GLint location, const glm::mat4& value);
 	void setUniform(GLint location, const GLint value);
+	void setUniform(GLint location, const GLuint value);
 	void setUniform(GLint location, const GLfloat value);
-private:
-	void printInfoLogShader(GLuint shader);
-	void printInfoLogProgram(GLuint shader);
 
-	GLuint loadSourcefile(const std::string& source_file_name, GLuint shader_type);
+	void setUniform(const std::string& name, const glm::vec4& value);
+	void setUniform(const std::string& name, const glm::vec3& value);
+	void setUniform(const std::string& name, const glm::vec2& value);
+
+	void setUniform(const std::string& name, const glm::mat4& value);
+	void setUniform(const std::string& name, const GLint value);
+	void setUniform(const std::string& name, const GLuint value);
+	void setUniform(const std::string& name, const GLfloat value);
+
+private:
+	void printInfoLogShader(GLuint shader, GLuint shader_type);
+	void printInfoLogProgram(GLuint shader);
+	void versionControl();
+
+	const GLchar* loadSourcefile(const std::string& source_file_name);
 
 	GLuint compileSource(const GLchar* source, GLuint shader_type);
 
